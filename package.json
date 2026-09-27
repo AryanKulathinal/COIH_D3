@@ -1,16 +1,22 @@
 {
-  "name": "coih-return-from-leave",
-  "version": "1.0.0",
-  "description": "Central Operational Intelligence Hub - Return from Leave Brief Generator",
+  "name": "coih",
+  "version": "2.0.0",
+  "description": "Central Operational Intelligence Hub — the knowledge layer that builds itself",
   "private": true,
+  "type": "module",
   "scripts": {
-    "server": "cd server && npm run dev",
-    "client": "cd client && npm run dev",
-    "dev": "concurrently \"npm run server\" \"npm run client\"",
-    "seed": "cd server && node src/seed.js",
-    "install:all": "npm install && cd server && npm install && cd ../client && npm install"
+    "dev": "concurrently -n api,web \"npm run dev:api\" \"npm run dev:web\"",
+    "dev:api": "node --watch-path=api --watch-path=lib scripts/dev-api.js",
+    "dev:web": "cd client && npx vite",
+    "build": "cd client && npm install && npm run build",
+    "install:all": "npm install && cd client && npm install"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.128.0",
+    "minisearch": "^7.1.1"
   },
   "devDependencies": {
-    "concurrently": "^9.1.0"
+    "concurrently": "^9.1.0",
+    "express": "^4.21.1"
   }
 }
