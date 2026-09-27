@@ -61,7 +61,7 @@ export default function Dashboard() {
           {[
             { icon: Clock, title: "3–5 h → under a minute", body: "Manual catch-up per leave instance versus a generated, fully cited brief." },
             { icon: Users, title: "120,000–200,000 hours / year", body: "Leave-return catch-up alone, across a 5,000-person organisation (the pitch baseline)." },
-            { icon: Coins, title: brief?.tokenUsage ? `≈ $${brief.tokenUsage.estimatedCost.toFixed(2)} per brief` : "Cents per brief", body: "Measured Claude Sonnet 5 token cost for the brief you generate, shown on every result." },
+            { icon: Coins, title: brief?.tokenUsage ? `≈ $${brief.tokenUsage.estimatedCost.toFixed(brief.tokenUsage.estimatedCost < 0.01 ? 4 : 2)} per brief` : "Cents per brief", body: "Actual model spend (reported by OpenRouter) for the brief you generate, shown on every result." },
             { icon: BookOpen, title: "Compounding knowledge", body: "Every resolved incident becomes an entry, so the next person gets an answer instead of an escalation." },
           ].map((r) => (
             <div key={r.title} style={{ display: "flex", gap: "0.5rem", marginBottom: "0.5rem" }}>

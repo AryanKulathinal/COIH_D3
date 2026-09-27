@@ -1,6 +1,6 @@
-// Runs every demo path once against the live Claude API and saves the responses to
-// data/<account>/fallbacks/, so the hosted demo still works if Claude is unreachable.
-// Usage: ANTHROPIC_API_KEY in .env.local, then `npm run record` (costs roughly $1–2).
+// Runs every demo path once against the live model (OpenRouter) and saves the responses to
+// data/<account>/fallbacks/, so the hosted demo still works if the model is unreachable.
+// Usage: OPENROUTER_API_KEY in .env.local, then `npm run record` (a few cents on gpt-oss-120b).
 import { existsSync, mkdirSync, writeFileSync } from "fs";
 import path from "path";
 import { fileURLToPath } from "url";

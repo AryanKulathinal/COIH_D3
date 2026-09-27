@@ -30,7 +30,7 @@ The pivot from "Express + MongoDB, demo/live toggle" to "Vercel functions + JSON
 
 ## 4. Skills
 
-- **`claude-api` skill.** Consulted before writing any Anthropic SDK code. It confirmed current model IDs, adaptive thinking on Sonnet 5, top-level prompt caching, `tool_choice: none` for the final synthesis round, and Sonnet 5 pricing for the cost estimates shown in the UI.
+- **`claude-api` skill.** Consulted while the runtime targeted Claude (model IDs, adaptive thinking, prompt caching, `tool_choice: none` for the final synthesis round). When the team switched the runtime to OpenRouter for lack of an Anthropic API key, Claude Code checked OpenRouter's live docs (model page, usage accounting) and ported the loop without changing any agent.
 - **Project skills** (the commands above) are exposed to Claude Code as skills.
 
 ## 5. Incremental, attributable commits
@@ -55,9 +55,9 @@ Before submitting, run `/code-review` on the full diff and `/security-review` (A
 
 ## Claude inside the product (separate from building it)
 
-The product itself runs four Claude Sonnet 5 agents through a hand-written tool-use loop (`lib/claude.js`):
+The product runs four agents on `openai/gpt-oss-120b` via OpenRouter through a hand-written, provider-neutral tool-use loop (`lib/llm.js`). It was first built on Claude Sonnet 5 and switched in one commit (`5579a4a`) because the team had no Anthropic API key; swapping back to Claude (or Claude on Bedrock/Vertex for enterprise hosting) only touches that file.
 
-- The loop executes each turn's tool calls **in parallel**, uses **adaptive thinking**, **caches** the system prompt and conversation prefix, disables tools on the final round so Claude must synthesise an answer, and tracks tokens and cost for every request.
+- The loop executes each turn's tool calls **in parallel**, uses configurable **reasoning effort**, routes only to providers that support every requested parameter, disables tools on the final round so the model must synthesise an answer, and reports the real spend (`usage.cost`) for every request.
 - **Brief agent:** 9 tools.
 - **Q&A agent:** 4 tools, with the knowledge-base tool present only in connected mode.
 - **Capture engine:** a single structured-output call.

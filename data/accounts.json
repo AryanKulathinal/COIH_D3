@@ -64,7 +64,7 @@
       ],
       "checklist": [
         { "id": "onboarding", "label": "Generate your onboarding path", "to": "/onboarding" },
-        { "id": "compare", "label": "Compare raw search vs. the knowledge layer", "to": "/ask?compare=1" },
+        { "id": "compare", "label": "Compare plain chat vs. the knowledge layer", "to": "/ask?compare=1" },
         { "id": "kb", "label": "Browse the knowledge your team already captured", "to": "/knowledge" }
       ]
     },

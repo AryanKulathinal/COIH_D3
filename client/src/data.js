@@ -1,5 +1,5 @@
 // Read-only view of the synthetic seed data for browsing screens (lists, source drawer).
-// Claude never runs in the browser — agents read the same files server-side.
+// The model never runs in the browser — agents read the same files server-side.
 import config from "@data/accounts.json";
 
 const files = import.meta.glob("@data/*/*.json", { eager: true, import: "default" });

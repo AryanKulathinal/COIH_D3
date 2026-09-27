@@ -6,14 +6,14 @@
   "type": "module",
   "scripts": {
     "dev": "concurrently -n api,web \"npm run dev:api\" \"npm run dev:web\"",
-    "dev:api": "node --watch-path=api --watch-path=lib scripts/dev-api.js",
+    "dev:api": "node --use-system-ca scripts/dev-api.js",
+    "dev:api:watch": "node --use-system-ca --watch-path=api --watch-path=lib scripts/dev-api.js",
     "dev:web": "cd client && npx vite",
     "build": "cd client && npm install && npm run build",
     "install:all": "npm install && cd client && npm install",
-    "record": "node scripts/record-fallbacks.js"
+    "record": "node --use-system-ca scripts/record-fallbacks.js"
   },
   "dependencies": {
-    "@anthropic-ai/sdk": "^0.128.0",
     "minisearch": "^7.1.1"
   },
   "devDependencies": {

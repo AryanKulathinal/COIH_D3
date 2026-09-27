@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import { Send, Columns2, MessagesSquare, Database, BookOpen } from "lucide-react";
+import { Send, Columns2, MessagesSquare, MessageSquareDashed, BookOpen } from "lucide-react";
 import { api } from "../services/api.js";
 import { useSession } from "../context/SessionContext.jsx";
 import AnswerCard from "../components/AnswerCard.jsx";
@@ -36,7 +36,7 @@ function CompareColumn({ title, subtitle, icon: Icon, color, state }) {
           <div style={{ fontSize: "0.625rem", color: "var(--text-muted)" }}>{subtitle}</div>
         </div>
       </div>
-      {state?.loading && <Thinking label="Searching…" />}
+      {state?.loading && <Thinking label="Thinking…" />}
       {state?.error && <div className="card" style={{ color: "var(--error-dark)", fontSize: "0.75rem" }}>{state.error}</div>}
       {state?.data && <AnswerCard data={state.data} />}
     </div>
@@ -103,7 +103,7 @@ export default function QAPage() {
           <p style={{ color: "var(--text-secondary)", fontSize: "0.75rem" }}>Answers come only from this account's records, with a source on every claim — or a refusal that names the gap.</p>
         </div>
         <div style={{ display: "flex", border: "1px solid var(--border)", borderRadius: "var(--radius-full)", padding: "0.125rem", background: "var(--white)" }}>
-          {[{ c: false, label: "Chat", icon: MessagesSquare }, { c: true, label: "Compare: raw vs knowledge layer", icon: Columns2 }].map((m) => (
+          {[{ c: false, label: "Chat", icon: MessagesSquare }, { c: true, label: "Compare: plain chat vs knowledge layer", icon: Columns2 }].map((m) => (
             <button key={m.label} onClick={() => setMode(m.c)}
               style={{ display: "inline-flex", alignItems: "center", gap: "0.25rem", padding: "0.25rem 0.75rem", borderRadius: "var(--radius-full)", fontSize: "0.688rem", background: compare === m.c ? "var(--primary)" : "transparent", color: compare === m.c ? "white" : "var(--grey-700)" }}>
               <m.icon size={12} /> {m.label}
@@ -128,15 +128,15 @@ export default function QAPage() {
         <>
           {!pair && (
             <div className="card" style={{ fontSize: "0.75rem", color: "var(--text-secondary)", lineHeight: 1.6 }}>
-              The same question runs twice. <strong>Left:</strong> raw records only — what enterprise search gives you. <strong>Right:</strong> the hub with its self-built knowledge layer, captured from resolved incidents and answered questions.
+              The same question goes to the same model twice. <strong>Left:</strong> a plain AI chat with no access to this account — no records, no knowledge base, no sources. <strong>Right:</strong> the hub with its self-built knowledge layer, captured from resolved incidents and answered questions, every claim linked to a record.
             </div>
           )}
           {pair && (
             <>
               <div style={{ fontSize: "0.75rem", fontWeight: 500, color: "var(--grey-900)" }}>“{pair.question}”</div>
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.75rem", alignItems: "start" }}>
-                <CompareColumn title="Raw sources only" subtitle="Knowledge layer disconnected (plain enterprise search)" icon={Database} color="var(--grey-600)" state={pair.raw} />
-                <CompareColumn title="COIH knowledge layer" subtitle="Raw sources + captured, confirmed knowledge" icon={BookOpen} color="var(--primary)" state={pair.hub} />
+                <CompareColumn title="Plain AI chat" subtitle="No account data · knowledge layer disconnected" icon={MessageSquareDashed} color="var(--grey-600)" state={pair.raw} />
+                <CompareColumn title="COIH knowledge layer" subtitle="Account records + captured, confirmed knowledge" icon={BookOpen} color="var(--primary)" state={pair.hub} />
               </div>
             </>
           )}

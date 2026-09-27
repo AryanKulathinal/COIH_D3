@@ -15,7 +15,7 @@ COIH is a per-account hub that **answers** operational questions strictly from t
 
 | # | Live demo moment | Where |
 |---|---|---|
-| 1 | A return-from-leave brief over a two-week absence window. Every line links to its source thread, and Claude's tool calls stream live. | Priya → Return Brief |
+| 1 | A return-from-leave brief over a two-week absence window. Every line links to its source thread, and the agent's tool calls stream live. | Priya → Return Brief |
 | 2 | A grounded answer to an operational question, with clickable citations | Priya → Ask |
 | 3 | Calibrated refusal: the system declines, names the gap, and suggests the person to ask | Priya → Ask "Q3 budget"; Meera → Ask before the fix |
 | 4 | An incident worked end to end. Resolving it **auto-captures** a knowledge entry, and the same question is then answered by that entry, which did not exist a minute earlier. | Meera → Incidents → Ask |
@@ -38,7 +38,7 @@ flowchart LR
   end
   Sources -->|common record shape| S[(Account-scoped store<br/>lib/store.js · data/&lt;account&gt;)]
   S --> I[MiniSearch BM25 index<br/>lib/search.js]
-  subgraph Agents["Claude Sonnet 5 agents (tool use · adaptive thinking · prompt caching)"]
+  subgraph Agents["gpt-oss-120b agents via OpenRouter (tool use · reasoning · parallel tools)"]
     B[Brief agent<br/>9 tools, parallel]
     Q[Q&A agent<br/>KB connected / raw only]
     K[Capture engine]
@@ -54,10 +54,10 @@ flowchart LR
 
 - **Adapter layer.** Every source is normalised into one record: `{sourceType, sourceId, account, timestamp, from, to, subject, body, thread, tags, component, status, …}`. Adding a source or an account is a configuration job, not a rebuild.
 - **Account isolation.** Each account has its own folder and its own index, and every store call takes an explicit `account`. Knowledge entries captured in the browser are re-validated server-side (`sanitizeEntries`), so an entry can never cross accounts.
-- **Agentic retrieval, not vector RAG.** Claude calls search tools (`search_sources`, `get_source`, `search_knowledge_base`, `list_people`, and time-window queries) over a BM25 index. This keeps exact IDs for citations, needs no embedding infrastructure, and lets Claude reformulate its own queries. `lib/search.js` is the single swap point for a hybrid or vector index at scale.
+- **Agentic retrieval (RAG without embeddings).** The model calls search tools (`search_sources`, `get_source`, `search_knowledge_base`, `list_people`, and time-window queries) over a BM25 index. This keeps exact IDs for citations, needs no embedding infrastructure, and lets the model reformulate its own queries. `lib/search.js` is the single swap point for a hybrid or vector index at scale.
 - **Grounded or silent.** Prompts and output contracts require a citation on every claim. When evidence is missing, the answer is `null` and the response carries a `refusal`, `gaps` and a `suggestedContact`. Confidence is calibrated as high, medium, low or none.
 - **Capture loop.** Resolving an incident sends the incident, its thread, related component docs and the resolver's closing note to the capture engine. It returns a structured entry: symptom, root cause, steps, prevention, evidence, misleading hypotheses, and any older records the entry contradicts. A human confirms it in one click and it is immediately searchable.
-- **Resilience.** Each Claude path can fall back to a response recorded from a real live run (`npm run record`). The UI marks these as "recorded response", so the demo never shows a blank screen.
+- **Resilience.** Each model-backed path can fall back to a response recorded from a real live run (`npm run record`). The UI marks these as "recorded response", so the demo never shows a blank screen.
 
 ## 3. Tech stack
 
@@ -65,10 +65,10 @@ flowchart LR
 |---|---|
 | Frontend | React 18, Vite 6, React Router 7, lucide-react. Plain JSX, UST theme (Poppins, teal `#006e74`) |
 | Backend | Vercel serverless functions, Node 20, ES modules (`api/`, `lib/`) |
-| AI | Claude Sonnet 5 (`claude-sonnet-5`) via `@anthropic-ai/sdk`: manual tool-use loop with parallel tool execution, adaptive thinking, prompt caching, per-request token and cost accounting |
+| AI | `openai/gpt-oss-120b` via OpenRouter's OpenAI-compatible Chat Completions API (plain `fetch`, no SDK): manual tool-use loop with parallel tool execution, configurable reasoning effort, JSON mode, per-request token and real cost accounting (`usage.cost`). Provider-neutral layer in `lib/llm.js` |
 | Retrieval | MiniSearch 7 (BM25-style, prefix and fuzzy matching, field boosts) |
 | Data | Synthetic JSON seed files per account; captured knowledge persisted in the browser (localStorage) |
-| Hosting | Vercel (static client + functions), with `ANTHROPIC_API_KEY` as a server-side environment variable |
+| Hosting | Vercel (static client + functions), with `OPENROUTER_API_KEY` as a server-side environment variable |
 | Built with | Claude Code (see [docs/CLAUDE_CODE_USAGE.md](docs/CLAUDE_CODE_USAGE.md)) |
 
 ## 4. Tools and integrations
@@ -83,16 +83,16 @@ The guidelines forbid live production systems, so every integration is **mocked*
 
 ## 5. Setup and run
 
-Requirements: Node 20+ and an Anthropic API key.
+Requirements: Node 20+ and an OpenRouter API key (openrouter.ai → Keys).
 
 ```bash
 git clone <repo> && cd d3-hackthon
 npm run install:all            # root (SDK, MiniSearch) + client (React, Vite)
-cp .env.example .env.local     # set ANTHROPIC_API_KEY=sk-ant-...
+cp .env.example .env.local     # set OPENROUTER_API_KEY=sk-or-...
 npm run dev                    # API http://localhost:3001 + web http://localhost:5173
 ```
 
-Optionally, refresh the recorded fallbacks. This runs every demo path once and costs roughly $1–2:
+Optionally, refresh the recorded fallbacks. This runs every demo path once (~35 model runs; a few cents on gpt-oss-120b):
 
 ```bash
 npm run record
@@ -100,9 +100,9 @@ npm run record
 
 **Deploy to Vercel:**
 1. Import the repository. `vercel.json` sets the build command, the output directory, 60-second functions, bundling of `data/**` and the SPA rewrites.
-2. Add `ANTHROPIC_API_KEY` under Project → Settings → Environment Variables.
+2. Add `OPENROUTER_API_KEY` under Project → Settings → Environment Variables.
 3. Deploy.
-4. Verify with `GET /api/health`, which should return `claudeConfigured: true`.
+4. Verify with `GET /api/health`, which should return `modelConfigured: true`.
 
 ### API
 
@@ -112,7 +112,7 @@ npm run record
 | POST | `/api/ask` | `{accountId, personaId, question, kbMode, capturedEntries, history}` | `{answer, confidence, sources, gaps, refusal, suggestedContact, tokenUsage}` |
 | POST | `/api/capture` | `{accountId, incidentId, resolutionNote, resolvedBy}` | `{entry (draft), sourcesRead, tokenUsage}` |
 | POST | `/api/onboarding` | `{accountId, personaId, capturedEntries}` | `{plan: {weeks, mustRead, knowledgeHighlights, peopleToKnow, ownershipMap, starterTask}}` |
-| GET | `/api/health` | – | `{status, claudeConfigured}` |
+| GET | `/api/health` | – | `{status, model, modelConfigured}` |
 
 ## 6. Test datasets (all synthetic)
 
@@ -126,14 +126,14 @@ Personas, suggested questions and checklists live in [data/accounts.json](data/a
 ## 7. Security and data handling (prototype and production)
 
 - **Prototype:**
-  - Synthetic data only; no live systems.
+  - Synthetic data only; no live systems. The public OpenRouter endpoint is acceptable only because the data is synthetic.
   - The API key never reaches the browser.
   - Endpoints are POST-only, with an account whitelist, input-length caps, a per-IP rate limit, and a recommended spend cap on the API key.
 - **Production design:**
   - One physically separate index per account, and entitlement-aware retrieval.
   - PII filtered at the adapter layer.
   - An audit log of sources and requester for every answer.
-  - Approved enterprise-hosted models (e.g. Claude on Amazon Bedrock or Google Vertex AI, which is a client swap in `lib/claude.js`); no training on client data.
+  - Approved enterprise-hosted models (e.g. Claude on Amazon Bedrock or Google Vertex AI instead of a public router — a change confined to `lib/llm.js`); no training on client data.
   - Retention aligned to the account, and human confirmation before any knowledge entry is published.
 
 ## 8. Roadmap

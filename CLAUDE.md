@@ -12,20 +12,20 @@ Scoring: Business Impact 40 · Technical Feasibility 30 · Claude Code Usage 20 
 - **Backend:** Vercel serverless functions (Node, ES modules), `api/` + shared `lib/`
 - **Data:** synthetic JSON seed files per account in `data/` — **no database**. Captured knowledge is stored in the browser (localStorage) and sent with each request.
 - **Retrieval:** MiniSearch (BM25-style lexical index) exposed to Claude as tools — agentic retrieval, not vector RAG
-- **AI:** Claude Sonnet 5 via `@anthropic-ai/sdk`, adaptive thinking, prompt caching, manual parallel tool-use loop
-- **Hosting:** Vercel (static client + functions). `ANTHROPIC_API_KEY` is a Vercel env var, read only server-side.
+- **AI:** `openai/gpt-oss-120b` via OpenRouter (OpenAI-compatible Chat Completions, plain `fetch`), reasoning effort, manual parallel tool-use loop, real cost from `usage.cost`. Provider-neutral layer in `lib/llm.js`. (Switched from Claude because the team has no Anthropic API key; the app is built with Claude Code.)
+- **Hosting:** Vercel (static client + functions). `OPENROUTER_API_KEY` is a Vercel env var, read only server-side.
 
 ## Project Structure
 
 ```
 ├── api/                      # Vercel functions (POST only, wrapped by lib/guard.js)
-│   ├── ask.js                # Grounded Q&A (kbMode connected|disconnected)
+│   ├── ask.js                # Grounded Q&A (kbMode connected | disconnected = same model, no account data, no tools — the comparison baseline)
 │   ├── brief.js              # Return-from-leave brief, streams NDJSON progress
 │   ├── capture.js            # Resolved incident → KB draft
 │   ├── onboarding.js         # New-joiner path + knowledge-ownership map
 │   └── health.js
 ├── lib/
-│   ├── claude.js             # Client, cached system prompt, runToolLoop, usage/cost, parseJson
+│   ├── llm.js                # OpenRouter client, system prompt, runToolLoop, usage/cost, parseJson
 │   ├── store.js              # Account-scoped JSON adapter + sanitiseEntries (isolation)
 │   ├── search.js             # MiniSearch indexes (swap point for vector/hybrid search)
 │   ├── guard.js              # apiHandler, rate limit, input caps, recorded fallbacks
@@ -52,12 +52,12 @@ Scoring: Business Impact 40 · Technical Feasibility 30 · Claude Code Usage 20 
 
 ```bash
 npm run install:all          # root + client deps
-cp .env.example .env.local   # add ANTHROPIC_API_KEY
+cp .env.example .env.local   # add OPENROUTER_API_KEY
 npm run dev                  # API :3001 + web :5173 (Vite proxies /api)
-npm run record               # optional: refresh recorded fallbacks (~$1–2)
+npm run record               # optional: refresh recorded fallbacks (a few cents)
 ```
 
-Deploy: import the repo in Vercel (build/output come from `vercel.json`), set `ANTHROPIC_API_KEY`, deploy.
+Deploy: import the repo in Vercel (build/output come from `vercel.json`), set `OPENROUTER_API_KEY`, deploy.
 
 ## Demo Scenario (3 personas, 2 isolated accounts)
 
@@ -71,7 +71,7 @@ The INC-7310 fix deliberately exists only in `data/accounts.json → demo.resolu
 
 - **Commit one feature/change at a time** (history is evidence for the Claude Code score).
 - Inline styles for component-specific styling; CSS classes only for reusable patterns (.card, .btn-*, .badge-*). Rem sizes: headings 1rem, body 0.75rem, small 0.688rem, tiny 0.625rem. Theme tokens in `client/src/index.css` (teal `#006e74`, Poppins).
-- All Claude calls go through `lib/claude.js` (`runToolLoop`); all data access through `lib/store.js` with an explicit `account`.
+- All model calls go through `lib/llm.js` (`runToolLoop`); all data access through `lib/store.js` with an explicit `account`.
 - Every new API route uses `apiHandler` and `withFallback`; add its path to `scripts/record-fallbacks.js`.
 - Never expose the API key to the client (no `VITE_` prefix). Synthetic data only; no live production integrations.
 - Grounded or silent: cite sourceIds / KB ids; refuse and name the gap and a person when evidence is missing.
