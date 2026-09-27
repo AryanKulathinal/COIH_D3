@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Routes, Route, NavLink, useLocation, useNavigate, Navigate } from "react-router-dom";
-import { Plane, MessageCircleQuestion, LayoutDashboard, Zap, Plug, Siren, ChevronDown, RotateCcw, Presentation } from "lucide-react";
+import { Plane, MessageCircleQuestion, LayoutDashboard, Zap, Plug, Siren, BookOpen, ChevronDown, RotateCcw, Presentation } from "lucide-react";
 import { config, getAccount } from "./data.js";
 import { useSession } from "./context/SessionContext.jsx";
 import Landing from "./pages/Landing.jsx";
@@ -9,6 +9,7 @@ import BriefPage from "./pages/BriefPage.jsx";
 import QAPage from "./pages/QAPage.jsx";
 import ConnectorsPage from "./pages/ConnectorsPage.jsx";
 import IncidentsPage from "./pages/IncidentsPage.jsx";
+import KnowledgePage from "./pages/KnowledgePage.jsx";
 import GuidedDemo from "./components/GuidedDemo.jsx";
 import { SourceDrawerProvider } from "./components/SourceDrawer.jsx";
 
@@ -17,6 +18,7 @@ const NAV_ITEMS = [
   { to: "/brief", label: "Return Brief", icon: Plane, when: (p) => Boolean(p.leave) },
   { to: "/ask", label: "Ask", icon: MessageCircleQuestion },
   { to: "/incidents", label: "Incidents", icon: Siren },
+  { to: "/knowledge", label: "Knowledge", icon: BookOpen },
   { to: "/connectors", label: "Connectors", icon: Plug },
 ];
 
@@ -118,6 +120,7 @@ function Shell() {
             <Route path="/brief" element={persona.leave ? <BriefPage /> : <Navigate to="/home" replace />} />
             <Route path="/ask" element={<QAPage />} />
             <Route path="/incidents" element={<IncidentsPage />} />
+            <Route path="/knowledge" element={<KnowledgePage />} />
             <Route path="/connectors" element={<ConnectorsPage />} />
             <Route path="*" element={<Navigate to={persona.home} replace />} />
           </Routes>
