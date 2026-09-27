@@ -5,8 +5,6 @@
       "name": "coih-api",
       "runtimeExecutable": "node",
       "runtimeArgs": [
-        "--watch-path=api",
-        "--watch-path=lib",
         "scripts/dev-api.js"
       ],
       "port": 3001
