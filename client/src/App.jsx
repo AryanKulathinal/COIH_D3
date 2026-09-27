@@ -9,6 +9,7 @@ import BriefPage from "./pages/BriefPage.jsx";
 import QAPage from "./pages/QAPage.jsx";
 import ConnectorsPage from "./pages/ConnectorsPage.jsx";
 import GuidedDemo from "./components/GuidedDemo.jsx";
+import { SourceDrawerProvider } from "./components/SourceDrawer.jsx";
 
 const NAV_ITEMS = [
   { to: "/home", label: "Home", icon: LayoutDashboard },
@@ -128,5 +129,9 @@ export default function App() {
   const { persona } = useSession();
   const location = useLocation();
   if (!persona) return location.pathname === "/" ? <Landing /> : <Navigate to="/" replace />;
-  return <Shell />;
+  return (
+    <SourceDrawerProvider>
+      <Shell />
+    </SourceDrawerProvider>
+  );
 }
