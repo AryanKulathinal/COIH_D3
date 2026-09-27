@@ -3,18 +3,17 @@ import { ChevronLeft, ChevronRight, ArrowRight, SkipForward, Zap } from "lucide-
 import { SLIDES } from "./slides.js";
 
 const INTERVAL_MS = 7000;
-const ACCENT = "#7fd6dd";
 
 function Tile({ tile, delay }) {
   return (
     <div className="glass slide-item" style={{ padding: "0.875rem 1rem", animationDelay: `${delay}s` }}>
       {tile.stat ? (
-        <div style={{ fontSize: "clamp(1.25rem, 2.2vw, 1.625rem)", fontWeight: 600, color: ACCENT, lineHeight: 1.1 }}>{tile.stat}</div>
+        <div className="text-gradient" style={{ fontSize: "clamp(1.25rem, 2.2vw, 1.625rem)", fontWeight: 600, lineHeight: 1.1, display: "inline-block" }}>{tile.stat}</div>
       ) : (
-        <div style={{ fontSize: "0.875rem", fontWeight: 600, color: "#ffffff", lineHeight: 1.3 }}>{tile.title}</div>
+        <div style={{ fontSize: "0.875rem", fontWeight: 600, color: "var(--primary-900)", lineHeight: 1.3 }}>{tile.title}</div>
       )}
-      <div style={{ fontSize: "0.688rem", color: "rgba(255,255,255,0.65)", marginTop: "0.25rem", lineHeight: 1.5 }}>{tile.label}</div>
-      {tile.sub && <div style={{ fontSize: "0.625rem", color: "rgba(255,255,255,0.4)", marginTop: "0.125rem" }}>{tile.sub}</div>}
+      <div style={{ fontSize: "0.688rem", color: "var(--text-secondary)", marginTop: "0.25rem", lineHeight: 1.5 }}>{tile.label}</div>
+      {tile.sub && <div style={{ fontSize: "0.625rem", color: "var(--text-muted)", marginTop: "0.125rem" }}>{tile.sub}</div>}
     </div>
   );
 }
@@ -76,11 +75,11 @@ export default function SlideDeck({ onFinish, reduced }) {
 
       <header style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "1.25rem 1.5rem", gap: "1rem" }}>
         <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", minWidth: 0 }}>
-          <div style={{ width: "1.75rem", height: "1.75rem", borderRadius: "0.4rem", background: "var(--primary)", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 0 18px rgba(0,151,172,0.5)", flexShrink: 0 }}>
+          <div style={{ width: "1.75rem", height: "1.75rem", borderRadius: "0.4rem", background: "linear-gradient(135deg, var(--bondi-blue), var(--primary-900))", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 6px 16px rgba(0,110,116,0.3)", flexShrink: 0 }}>
             <Zap size={15} color="white" />
           </div>
-          <span style={{ fontWeight: 700, fontSize: "0.875rem", letterSpacing: "0.04em" }}>COIH</span>
-          <span style={{ fontSize: "0.688rem", color: "rgba(255,255,255,0.45)", marginLeft: "0.25rem", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+          <span className="text-gradient" style={{ fontWeight: 700, fontSize: "0.875rem", letterSpacing: "0.04em" }}>COIH</span>
+          <span style={{ fontSize: "0.688rem", color: "var(--text-muted)", marginLeft: "0.25rem", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
             UST D3 Hackathon · Fix It Forward with Claude
           </span>
         </div>
@@ -99,19 +98,19 @@ export default function SlideDeck({ onFinish, reduced }) {
           <article key={index} className="slide-enter" style={{ "--dx": dir > 0 ? "1.5rem" : "-1.5rem", padding: "0.5rem 0.75rem" }}
             onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)}>
             <div className="slide-item" style={{ display: "flex", alignItems: "center", gap: "0.625rem", animationDelay: "0s" }}>
-              <div style={{ width: "2.25rem", height: "2.25rem", borderRadius: "0.6rem", background: "rgba(0,151,172,0.18)", border: "1px solid rgba(0,151,172,0.4)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                <slide.icon size={18} color={ACCENT} />
+              <div style={{ width: "2.25rem", height: "2.25rem", borderRadius: "0.6rem", background: "var(--primary-light)", border: "1px solid var(--primary-200)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                <slide.icon size={18} color="var(--primary)" />
               </div>
-              <div style={{ fontSize: "0.688rem", fontWeight: 600, letterSpacing: "0.12em", textTransform: "uppercase", color: ACCENT }}>
+              <div style={{ fontSize: "0.688rem", fontWeight: 600, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--primary)" }}>
                 {slide.kicker}
-                <span style={{ color: "rgba(255,255,255,0.35)", marginLeft: "0.625rem", fontWeight: 500 }}>{index + 1} / {total}</span>
+                <span style={{ color: "var(--text-muted)", marginLeft: "0.625rem", fontWeight: 500 }}>{index + 1} / {total}</span>
               </div>
             </div>
 
-            <h1 className="slide-item" style={{ fontSize: "clamp(1.75rem, 4vw, 3rem)", fontWeight: 600, lineHeight: 1.15, letterSpacing: "-0.01em", margin: "1rem 0 0.875rem", maxWidth: "44rem", animationDelay: "0.08s" }}>
+            <h1 className="slide-item text-gradient" style={{ fontSize: "clamp(1.75rem, 4vw, 3rem)", fontWeight: 600, lineHeight: 1.15, letterSpacing: "-0.01em", margin: "1rem 0 0.875rem", maxWidth: "44rem", paddingBottom: "0.1em", animationDelay: "0.08s" }}>
               {slide.title}
             </h1>
-            <p className="slide-item" style={{ fontSize: "clamp(0.875rem, 1.3vw, 1rem)", color: "rgba(255,255,255,0.72)", lineHeight: 1.7, maxWidth: "46rem", animationDelay: "0.16s" }}>
+            <p className="slide-item" style={{ fontSize: "clamp(0.875rem, 1.3vw, 1rem)", color: "var(--grey-700)", lineHeight: 1.7, maxWidth: "46rem", animationDelay: "0.16s" }}>
               {slide.body}
             </p>
 
@@ -123,7 +122,7 @@ export default function SlideDeck({ onFinish, reduced }) {
 
             {last && (
               <div className="slide-item" style={{ marginTop: "1.75rem", animationDelay: "0.5s" }}>
-                <button className="btn-light" onClick={onFinish}>
+                <button className="btn-gradient" onClick={onFinish}>
                   Sign in <ArrowRight size={14} />
                 </button>
               </div>
@@ -154,7 +153,7 @@ export default function SlideDeck({ onFinish, reduced }) {
             </button>
           ))}
         </div>
-        <div style={{ display: "flex", justifyContent: "space-between", marginTop: "0.5rem", fontSize: "0.625rem", color: "rgba(255,255,255,0.35)", letterSpacing: "0.04em" }}>
+        <div style={{ display: "flex", justifyContent: "space-between", marginTop: "0.5rem", fontSize: "0.625rem", color: "var(--text-muted)", letterSpacing: "0.04em" }}>
           <span>{"← → to navigate · Esc to skip"}{autoplay && paused ? " · paused" : ""}</span>
           <span>All data is synthetic</span>
         </div>

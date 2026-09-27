@@ -18,10 +18,11 @@ function useReducedMotion() {
   return reduced;
 }
 
+// Soft colour washes over the light page background (theme teals plus the Beta purple, kept faint).
 const ORBS = [
-  { color: "#0097ac", top: "-12%", left: "-10%", duration: "24s", delay: "0s", opacity: 0.5 },
-  { color: "#006e74", bottom: "-18%", right: "-8%", duration: "30s", delay: "-9s", opacity: 0.55 },
-  { color: "#881e87", top: "35%", left: "58%", duration: "19s", delay: "-4s", opacity: 0.3 },
+  { color: "#80b7b9", top: "-12%", left: "-10%", duration: "24s", delay: "0s", opacity: 0.45 },
+  { color: "#0097ac", bottom: "-18%", right: "-8%", duration: "30s", delay: "-9s", opacity: 0.18 },
+  { color: "#e7d2e7", top: "35%", left: "58%", duration: "19s", delay: "-4s", opacity: 0.6 },
 ];
 
 // Landing stages: intro (splash) → slides (problem / root cause deck) → login (persona pick).
