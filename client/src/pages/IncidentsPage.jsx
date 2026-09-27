@@ -1,13 +1,13 @@
 import { useState, useMemo } from "react";
-import { Link } from "react-router-dom";
-import { Siren, CheckCircle2, BookOpen, AlertTriangle, Sparkles, Check, X, ArrowRight } from "lucide-react";
+import { Siren, CheckCircle2, BookOpen, AlertTriangle, Sparkles, Check, X, ChevronDown, ChevronUp } from "lucide-react";
 import { api } from "../services/api.js";
 import { useSession } from "../context/SessionContext.jsx";
 import { config } from "../data.js";
-import { SourceChip } from "../components/SourceDrawer.jsx";
+import { SourceChip, KnowledgeBody } from "../components/SourceDrawer.jsx";
 import RunMeta from "../components/RunMeta.jsx";
 
 const fmt = (ts) => new Date(ts).toLocaleString("en-GB", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit", timeZone: "UTC" });
+const fmtLong = (ts) => (ts ? new Date(ts).toLocaleString("en-GB", { dateStyle: "medium", timeStyle: "short", timeZone: "UTC" }) + " UTC" : "");
 const FIELDS = [
   ["symptom", "Symptom"],
   ["rootCause", "Root cause"],
@@ -64,6 +64,82 @@ function DraftReview({ capture, onPublish, onDiscard }) {
   );
 }
 
+function Row({ label, children }) {
+  if (!children) return null;
+  return (
+    <div style={{ display: "flex", gap: "0.5rem", fontSize: "0.688rem", lineHeight: 1.6 }}>
+      <span style={{ width: "7rem", flexShrink: 0, color: "var(--text-muted)" }}>{label}</span>
+      <span style={{ flex: 1, color: "var(--grey-800)", whiteSpace: "pre-wrap" }}>{children}</span>
+    </div>
+  );
+}
+
+const SectionLabel = ({ children }) => (
+  <div style={{ fontSize: "0.563rem", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.05em", color: "var(--text-muted)", marginBottom: "0.25rem" }}>{children}</div>
+);
+
+// "More": everything the hub holds about one incident — the record, how it was closed, and the
+// knowledge entry captured from it — in one card, without leaving the page.
+function IncidentDetails({ incident, entry, thread, docs }) {
+  const meta = incident.metadata || {};
+  return (
+    <div className="card fade-in" style={{ display: "grid", gridTemplateColumns: entry ? "1fr 1fr" : "1fr", gap: "1rem", borderLeft: "3px solid var(--primary)" }}>
+      <div>
+        <div style={{ display: "flex", alignItems: "center", gap: "0.375rem", marginBottom: "0.5rem" }}>
+          <Siren size={14} color="var(--error)" />
+          <span style={{ fontSize: "0.75rem", fontWeight: 600, color: "var(--grey-900)" }}>Incident record</span>
+          <SourceChip id={incident.sourceId} />
+        </div>
+        <div style={{ display: "flex", flexDirection: "column", gap: "0.125rem" }}>
+          <Row label="Title">{incident.subject}</Row>
+          <Row label="Priority / status">{[incident.priority, incident.status].filter(Boolean).join(" / ")}</Row>
+          <Row label="Component">{incident.component}</Row>
+          <Row label="Opened">{fmtLong(incident.timestamp)}</Row>
+          <Row label="Raised by">{incident.from}</Row>
+          <Row label="On-call">{meta.onCall}</Row>
+          <Row label="Resolved by">{incident.resolvedBy || meta.resolvedBy}</Row>
+          <Row label="Resolved at">{incident.resolvedAt ? fmtLong(incident.resolvedAt) : null}</Row>
+          <Row label="Impact">{meta.impactDuration ? `${meta.impactDuration}${meta.affectedOrders ? `, ${meta.affectedOrders} orders affected` : ""}` : null}</Row>
+          <Row label="Thread">{thread.length ? `${thread.length} linked records` : null}</Row>
+          <Row label="Tags">{incident.tags?.length ? incident.tags.map((t) => `#${t}`).join(" ") : null}</Row>
+        </div>
+        {incident.resolutionNote && (
+          <div style={{ marginTop: "0.5rem" }}>
+            <SectionLabel>Closing note</SectionLabel>
+            <div style={{ fontSize: "0.688rem", color: "var(--grey-800)", lineHeight: 1.6, whiteSpace: "pre-wrap" }}>{incident.resolutionNote}</div>
+          </div>
+        )}
+        {docs.length > 0 && (
+          <div style={{ marginTop: "0.5rem" }}>
+            <SectionLabel>Related documents</SectionLabel>
+            <div style={{ display: "flex", flexWrap: "wrap", gap: "0.25rem" }}>
+              {docs.map((d) => <SourceChip key={d.sourceId} id={d.sourceId} label={d.subject} />)}
+            </div>
+          </div>
+        )}
+      </div>
+
+      {entry && (
+        <div style={{ borderLeft: "1px solid var(--border-light)", paddingLeft: "1rem" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "0.375rem", marginBottom: "0.5rem" }}>
+            <BookOpen size={14} color="var(--success)" />
+            <span style={{ fontSize: "0.75rem", fontWeight: 600, color: "var(--grey-900)" }}>Captured knowledge</span>
+            <SourceChip id={entry.id} />
+            <span className="badge badge-resolved" style={{ marginLeft: "auto" }}>{entry.status || "confirmed"}</span>
+          </div>
+          <div style={{ fontSize: "0.75rem", fontWeight: 600, color: "var(--grey-900)", marginBottom: "0.5rem" }}>{entry.title}</div>
+          <KnowledgeBody entry={entry} />
+          {entry.tags?.length > 0 && (
+            <div style={{ display: "flex", flexWrap: "wrap", gap: "0.25rem" }}>
+              {entry.tags.map((t) => <span key={t} className="badge badge-low">#{t}</span>)}
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
 export default function IncidentsPage() {
   const { persona, accountId, seed, knowledge, incidentState, setIncident, publishEntry, markStep } = useSession();
   const incidents = useMemo(() => seed.sources.filter((s) => s.sourceType === "incident").map((i) => ({ ...i, ...incidentState[i.sourceId] })).reverse(), [seed, incidentState]);
@@ -77,10 +153,12 @@ export default function IncidentsPage() {
   const [capture, setCapture] = useState(null);
   const [error, setError] = useState(null);
   const [published, setPublished] = useState(null);
+  const [showMore, setShowMore] = useState(false);
 
   const resolved = incidents.filter((i) => i.status === "resolved");
   const captureRate = resolved.length ? Math.round((resolved.filter((i) => kbFor(i.sourceId)).length / resolved.length) * 100) : 0;
   const thread = selected ? seed.sources.filter((s) => s.sourceId !== selected.sourceId && ((selected.thread && s.thread === selected.thread) || s.body.includes(selected.sourceId))) : [];
+  const relatedDocs = selected ? seed.sources.filter((s) => s.sourceType === "document" && s.component && s.component === selected.component) : [];
 
   function select(id) {
     setSelectedId(id);
@@ -88,6 +166,7 @@ export default function IncidentsPage() {
     setCapture(null);
     setError(null);
     setPublished(null);
+    setShowMore(false);
   }
 
   async function runCapture(resolutionNote) {
@@ -217,16 +296,21 @@ export default function IncidentsPage() {
             {capture && <DraftReview capture={capture} onPublish={publish} onDiscard={() => setCapture(null)} />}
 
             {(published || kbFor(selected.sourceId)) && !capture && (
-              <div className="card fade-in" style={{ display: "flex", alignItems: "center", gap: "0.625rem", borderLeft: "3px solid var(--success)" }}>
-                <BookOpen size={16} color="var(--success)" />
-                <div style={{ flex: 1, fontSize: "0.75rem" }}>
-                  <div style={{ fontWeight: 600, color: "var(--grey-900)" }}>{(published || kbFor(selected.sourceId)).title}</div>
-                  <div style={{ color: "var(--text-secondary)", fontSize: "0.688rem" }}>
-                    In the knowledge base as <SourceChip id={(published || kbFor(selected.sourceId)).id} /> — answerable by anyone on this account from now on.
+              <>
+                <div className="card fade-in" style={{ display: "flex", alignItems: "center", gap: "0.625rem", borderLeft: "3px solid var(--success)" }}>
+                  <BookOpen size={16} color="var(--success)" />
+                  <div style={{ flex: 1, fontSize: "0.75rem" }}>
+                    <div style={{ fontWeight: 600, color: "var(--grey-900)" }}>{(published || kbFor(selected.sourceId)).title}</div>
+                    <div style={{ color: "var(--text-secondary)", fontSize: "0.688rem" }}>
+                      In the knowledge base as <SourceChip id={(published || kbFor(selected.sourceId)).id} /> — answerable by anyone on this account from now on.
+                    </div>
                   </div>
+                  <button className="btn-outline btn-sm" onClick={() => setShowMore((v) => !v)} aria-expanded={showMore}>
+                    {showMore ? <>Less <ChevronUp size={12} /></> : <>More <ChevronDown size={12} /></>}
+                  </button>
                 </div>
-                <Link to="/ask" className="btn-outline btn-sm">Ask about it <ArrowRight size={12} /></Link>
-              </div>
+                {showMore && <IncidentDetails incident={selected} entry={published || kbFor(selected.sourceId)} thread={thread} docs={relatedDocs} />}
+              </>
             )}
           </div>
         )}

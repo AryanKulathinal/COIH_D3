@@ -19,7 +19,7 @@ Scoring: Business Impact 40 · Technical Feasibility 30 · Claude Code Usage 20 
 
 ```
 ├── api/                      # Vercel functions (POST only, wrapped by lib/guard.js)
-│   ├── ask.js                # Grounded Q&A (kbMode connected|disconnected)
+│   ├── ask.js                # Grounded Q&A (kbMode connected | disconnected = same model, no account data, no tools — the comparison baseline)
 │   ├── brief.js              # Return-from-leave brief, streams NDJSON progress
 │   ├── capture.js            # Resolved incident → KB draft
 │   ├── onboarding.js         # New-joiner path + knowledge-ownership map
