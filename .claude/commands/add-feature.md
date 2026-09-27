@@ -1,9 +1,9 @@
 # Add a new feature to COIH
 
 ## Backend (Vercel function)
-1. Claude logic goes in `lib/agents/<feature>.js`. Reuse `runToolLoop`, `parseJson` and `CACHED_SYSTEM` from `lib/claude.js`; read data only through `lib/store.js` (always pass `account`).
+1. Model logic goes in `lib/agents/<feature>.js`. Reuse `runToolLoop` and `parseJson` from `lib/llm.js` (pass `json: true` for single-shot JSON calls); read data only through `lib/store.js` (always pass `account`).
 2. Create `api/<feature>.js` exporting `apiHandler(async (body, req, res) => …)` from `lib/guard.js` — it enforces POST, the account whitelist and rate limiting. Validate inputs with `requireString`.
-3. Wrap the Claude call in `withFallback(account, fallbackKey("<feature>", …), fn)` and add the path to `scripts/record-fallbacks.js`.
+3. Wrap the model call in `withFallback(account, fallbackKey("<feature>", …), fn)` and add the path to `scripts/record-fallbacks.js`.
 
 ## Frontend
 1. Add the call to `client/src/services/api.js`
@@ -11,7 +11,7 @@
 3. Render citations with `SourceChip` / `CitedText` from `components/SourceDrawer.jsx`, and costs with `components/RunMeta.jsx`
 
 ## Rules
-- Model `claude-sonnet-5`, `thinking: { type: "adaptive" }`, cached system prompt — all handled by `runToolLoop`
+- Model `openai/gpt-oss-120b` via OpenRouter (`LLM_MODEL`), reasoning effort, shared system prompt — all handled by `runToolLoop`
 - Grounded or silent: cite sourceIds / KB ids; refuse and name the gap when evidence is missing
 - Account-scoped: never read across `data/<account>` folders
 - UST theme (`client/src/index.css`), rem sizes, inline styles for component-specific styling

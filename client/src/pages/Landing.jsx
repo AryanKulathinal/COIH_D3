@@ -21,7 +21,7 @@ const SLIDES = [
     icon: Link2,
     kicker: "The hub",
     title: "Grounded in your account — or silent",
-    body: "COIH connects to the tools the account already runs (mail, chat, Jira, incidents, docs, meetings). Claude answers only from those records, with a source on every line. When evidence is missing it refuses, names the gap and the person to ask.",
+    body: "COIH connects to the tools the account already runs (mail, chat, Jira, incidents, docs, meetings). The AI answers only from those records, with a source on every line. When evidence is missing it refuses, names the gap and the person to ask.",
   },
   {
     icon: RefreshCw,
@@ -125,7 +125,7 @@ export default function Landing() {
           </div>
           <div>
             <div style={{ fontWeight: 700, fontSize: "1rem", color: "var(--primary-900)" }}>COIH · Central Operational Intelligence Hub</div>
-            <div style={{ fontSize: "0.75rem", color: "var(--text-secondary)" }}>The knowledge layer that builds itself — built with Claude for the UST D3 Hackathon</div>
+            <div style={{ fontSize: "0.75rem", color: "var(--text-secondary)" }}>The knowledge layer that builds itself — built with Claude Code for the UST D3 Hackathon</div>
           </div>
         </header>
 

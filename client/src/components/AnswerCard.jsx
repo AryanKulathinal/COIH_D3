@@ -1,4 +1,4 @@
-import { CheckCircle, HelpCircle, AlertCircle, ShieldAlert, UserRound, BookOpen } from "lucide-react";
+import { CheckCircle, HelpCircle, AlertCircle, ShieldAlert, UserRound, BookOpen, ShieldCheck } from "lucide-react";
 import { CitedText, SourceChip } from "./SourceDrawer.jsx";
 import RunMeta from "./RunMeta.jsx";
 
@@ -24,6 +24,13 @@ export default function AnswerCard({ data }) {
         {usedKb && (
           <span className="badge badge-resolved" style={{ display: "inline-flex", gap: "0.25rem" }}>
             <BookOpen size={11} /> answered from captured knowledge
+          </span>
+        )}
+        {data.verification && !refused && (
+          <span className="badge badge-low" style={{ display: "inline-flex", gap: "0.25rem" }}
+            title="Every citation is checked server-side against the records actually retrieved for this answer.">
+            <ShieldCheck size={11} /> citations verified
+            {data.verification.removed?.length > 0 && ` · ${data.verification.removed.length} unverifiable removed`}
           </span>
         )}
       </div>
