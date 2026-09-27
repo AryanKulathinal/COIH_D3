@@ -13,7 +13,6 @@
     "record": "node scripts/record-fallbacks.js"
   },
   "dependencies": {
-    "@anthropic-ai/sdk": "^0.128.0",
     "minisearch": "^7.1.1"
   },
   "devDependencies": {
