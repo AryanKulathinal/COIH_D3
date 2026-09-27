@@ -1,20 +1,18 @@
 import { useState, useEffect } from "react";
 import { Routes, Route, NavLink, useLocation } from "react-router-dom";
-import { Plane, MessageCircleQuestion, Database, LayoutDashboard, Zap, Plug, Sparkles } from "lucide-react";
+import { Plane, MessageCircleQuestion, Database, LayoutDashboard, Zap, Plug } from "lucide-react";
 import { api } from "./services/api.js";
 import Dashboard from "./pages/Dashboard.jsx";
 import BriefPage from "./pages/BriefPage.jsx";
 import QAPage from "./pages/QAPage.jsx";
 import CapturePage from "./pages/CapturePage.jsx";
 import ConnectorsPage from "./pages/ConnectorsPage.jsx";
-import InsightsPage from "./pages/InsightsPage.jsx";
 
 const NAV_ITEMS = [
   { to: "/", label: "Dashboard", icon: LayoutDashboard },
   { to: "/brief", label: "Return Brief", icon: Plane },
   { to: "/qa", label: "Ask Questions", icon: MessageCircleQuestion },
   { to: "/capture", label: "Knowledge", icon: Database },
-  { to: "/insights", label: "Insights", icon: Sparkles },
   { to: "/connectors", label: "Connectors", icon: Plug },
 ];
 
@@ -104,7 +102,6 @@ function App() {
             <Route path="/brief/:id" element={<BriefPage />} />
             <Route path="/qa" element={<QAPage />} />
             <Route path="/capture" element={<CapturePage />} />
-            <Route path="/insights" element={<InsightsPage />} />
             <Route path="/connectors" element={<ConnectorsPage />} />
           </Routes>
         </div>

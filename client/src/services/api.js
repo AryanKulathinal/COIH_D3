@@ -32,9 +32,4 @@ export const api = {
   addDataBulk: (items) => request("/connectors/data/bulk", { method: "POST", body: JSON.stringify({ items }) }),
   getDataEntries: (sourceType, limit) => request(`/connectors/data?sourceType=${sourceType || ""}&limit=${limit || 50}`),
   deleteDataEntry: (id) => request(`/connectors/data/${id}`, { method: "DELETE" }),
-
-  getFlashcards: (data) => request("/insights/flashcards", { method: "POST", body: JSON.stringify(data) }),
-  getQuiz: (data) => request("/insights/quiz", { method: "POST", body: JSON.stringify(data) }),
-  getAudioScript: (data) => request("/insights/audio", { method: "POST", body: JSON.stringify(data) }),
-  getInfographic: (data) => request("/insights/infographic", { method: "POST", body: JSON.stringify(data) }),
 };
