@@ -15,8 +15,14 @@ const FIELDS = [
   ["prevention", "Prevention"],
 ];
 
+const toText = (v) => (Array.isArray(v) ? v.join("\n") : v ?? "");
+
 function DraftReview({ capture, onPublish, onDiscard }) {
-  const [draft, setDraft] = useState(capture.entry);
+  const [draft, setDraft] = useState(() => {
+    const e = { ...capture.entry };
+    for (const [k] of FIELDS) e[k] = toText(e[k]);
+    return e;
+  });
   const set = (k) => (e) => setDraft({ ...draft, [k]: e.target.value });
 
   return (
