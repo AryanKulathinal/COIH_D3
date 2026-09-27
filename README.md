@@ -23,7 +23,7 @@ COIH is a per-account hub that **answers** operational questions strictly from t
 | 6 | A new-joiner onboarding path plus a knowledge-ownership map of single points of failure | Vikram → Onboarding |
 | 7 | Account isolation: Beta users can never retrieve Alpha records | Meera → Ask about INC-4421 |
 
-The landing page explains the idea in four slides and offers three personas on two isolated accounts. A **Guided demo** checklist follows the judge through each persona's flow.
+The landing page opens with a short COIH intro, tells the story in six slides (problem, root cause, cost, what COIH does, capture, impact) and then offers a one-click sign-in as one of three personas on two isolated accounts. A **Guided demo** checklist follows the judge through each persona's flow.
 
 ## 2. Architecture
 

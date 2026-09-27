@@ -3,7 +3,7 @@ import { Routes, Route, NavLink, useLocation, useNavigate, Navigate } from "reac
 import { Plane, MessageCircleQuestion, LayoutDashboard, Zap, Plug, Siren, BookOpen, GraduationCap, ChevronDown, RotateCcw, Presentation } from "lucide-react";
 import { config, getAccount } from "./data.js";
 import { useSession } from "./context/SessionContext.jsx";
-import Landing from "./pages/Landing.jsx";
+import Landing, { requestIntroReplay } from "./pages/Landing.jsx";
 import Dashboard from "./pages/Dashboard.jsx";
 import BriefPage from "./pages/BriefPage.jsx";
 import QAPage from "./pages/QAPage.jsx";
@@ -64,7 +64,7 @@ function PersonaSwitcher() {
             );
           })}
           <div style={{ borderTop: "1px solid var(--border-light)", margin: "0.25rem 0" }} />
-          <button onClick={() => { setOpen(false); clearPersona(); navigate("/"); }} style={{ display: "flex", alignItems: "center", gap: "0.375rem", width: "100%", padding: "0.375rem 0.5rem", background: "none", fontSize: "0.688rem", color: "var(--grey-700)" }}>
+          <button onClick={() => { setOpen(false); requestIntroReplay(); clearPersona(); navigate("/"); }} style={{ display: "flex", alignItems: "center", gap: "0.375rem", width: "100%", padding: "0.375rem 0.5rem", background: "none", fontSize: "0.688rem", color: "var(--grey-700)" }}>
             <Presentation size={13} /> Back to intro
           </button>
           <button onClick={() => { setOpen(false); resetDemo(); navigate("/"); }} style={{ display: "flex", alignItems: "center", gap: "0.375rem", width: "100%", padding: "0.375rem 0.5rem", background: "none", fontSize: "0.688rem", color: "var(--error-dark)" }}>
