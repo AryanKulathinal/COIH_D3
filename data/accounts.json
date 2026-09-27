@@ -1,0 +1,105 @@
+{
+  "accounts": [
+    {
+      "id": "alpha",
+      "name": "Account Alpha",
+      "client": "Helix Retail",
+      "domain": "E-commerce payments & inventory",
+      "team": "Team Alpha",
+      "color": "#006e74"
+    },
+    {
+      "id": "beta",
+      "name": "Account Beta",
+      "client": "Meridian Freight",
+      "domain": "Logistics & carrier integrations",
+      "team": "Team Beta",
+      "color": "#881e87"
+    }
+  ],
+  "personas": [
+    {
+      "id": "priya",
+      "userId": "priya.sharma",
+      "name": "Priya Sharma",
+      "initials": "PS",
+      "role": "Senior Backend Engineer",
+      "account": "alpha",
+      "scenario": "returning",
+      "scenarioLabel": "Back from 2 weeks of leave",
+      "today": "2025-04-15",
+      "leave": { "start": "2025-04-01", "end": "2025-04-14" },
+      "pitch": "Two weeks away. 9 emails, 9 chats, 4 meetings and a P1 happened without her. Catch up in under a minute, not four hours.",
+      "home": "/brief",
+      "questions": [
+        "Why did we pick Stripe over Adyen?",
+        "What happened with the orders-db incident while I was away?",
+        "Who changed the rate limiting design and why?",
+        "What is the Q3 budget for the payments team?"
+      ],
+      "checklist": [
+        { "id": "brief", "label": "Generate your return-from-leave brief", "to": "/brief" },
+        { "id": "source", "label": "Open a source behind any brief line", "to": "/brief" },
+        { "id": "ask-grounded", "label": "Ask “Why did we pick Stripe over Adyen?”", "to": "/ask" },
+        { "id": "ask-refusal", "label": "Ask about the Q3 budget and watch it refuse", "to": "/ask" }
+      ]
+    },
+    {
+      "id": "vikram",
+      "userId": "vikram.patel",
+      "name": "Vikram Patel",
+      "initials": "VP",
+      "role": "Backend Engineer",
+      "account": "alpha",
+      "scenario": "newjoiner",
+      "scenarioLabel": "New joiner, day 1",
+      "today": "2025-04-21",
+      "pitch": "First day on the account. Instead of 90 days of asking colleagues, he inherits everything the team has already captured.",
+      "home": "/onboarding",
+      "questions": [
+        "How do we safely rotate the auth signing certificate?",
+        "Orders DB is throwing connection pool errors — what do I do?",
+        "How do I release a change to production?",
+        "Who owns the inventory API?"
+      ],
+      "checklist": [
+        { "id": "onboarding", "label": "Generate your onboarding path", "to": "/onboarding" },
+        { "id": "compare", "label": "Compare raw search vs. the knowledge layer", "to": "/ask?compare=1" },
+        { "id": "kb", "label": "Browse the knowledge your team already captured", "to": "/knowledge" }
+      ]
+    },
+    {
+      "id": "meera",
+      "userId": "meera.iyer",
+      "name": "Meera Iyer",
+      "initials": "MI",
+      "role": "Integration Engineer",
+      "account": "beta",
+      "scenario": "daily",
+      "scenarioLabel": "Day-to-day, live incident",
+      "today": "2025-04-15",
+      "pitch": "A P2 is burning and nobody knows the fix yet. Resolve it once, and the hub remembers it for everyone after her.",
+      "home": "/incidents",
+      "questions": [
+        "Carrier sync is failing with 429s from FastShip — how do we fix it?",
+        "How did we fix the route-optimizer timeouts?",
+        "What happened with INC-4421 on orders-db?",
+        "What did we decide about the route optimizer?"
+      ],
+      "checklist": [
+        { "id": "ask-before", "label": "Ask how to fix the FastShip 429s (no answer yet)", "to": "/ask" },
+        { "id": "resolve", "label": "Resolve INC-7310 and watch knowledge get captured", "to": "/incidents" },
+        { "id": "ask-after", "label": "Ask the same question again", "to": "/ask" },
+        { "id": "isolation", "label": "Ask about Account Alpha's INC-4421 (isolation)", "to": "/ask" }
+      ]
+    }
+  ],
+  "demo": {
+    "resolutionPrefill": {
+      "INC-7310": {
+        "resolvedBy": "meera.iyer",
+        "note": "Root cause: FastShip's v3 migration on Apr 14 cut our account-level label API limit from 300 to 100 requests/minute (buried in the v3 release notes). 4 workers x batch 100 already exceeded it; scaling to 8 workers and the fixed 1s retries made it worse. Fix: scaled carrier-sync back to 4 workers, set FASTSHIP_BATCH_SIZE=25 and FASTSHIP_MAX_RPM=90, switched retries to exponential backoff that honours the Retry-After header. Backlog drained by 13:10, error rate 0%. Follow-ups: request a quota increase from FastShip before peak season (JIRA-B-541), and the Carrier Integration Overview doc still says 300/min — needs updating."
+      }
+    }
+  }
+}
