@@ -2,203 +2,80 @@
 
 ## What This Project Is
 
-A hackathon demo for UST's D3 Hackathon. COIH solves the "return-from-leave" problem: associates spend 3-5 hours catching up after leave. This tool does it in under 30 seconds using Claude AI.
+A hackathon prototype for UST's D3 "Fix It Forward with Claude" hackathon (submission due 28 Sep 2026, 9:00 AM IST). COIH is a per-account knowledge layer that (1) answers operational questions grounded strictly in the account's own artifacts, with a source on every claim, and (2) captures new knowledge automatically from resolved incidents. Headline use case: the return-from-leave brief (3–5 h manual catch-up → under a minute).
 
-**Problem:** 120,000-200,000 productivity hours lost annually in a 5,000-person org.
-**Solution:** Connect to existing tools (email, chat, tickets, meetings, docs) → Claude AI generates a structured catch-up brief with source citations.
+Scoring: Business Impact 40 · Technical Feasibility 30 · Claude Code Usage 20 · Presentation 10.
 
 ## Tech Stack
 
-- **Frontend:** React 18 + Vite (no TypeScript, plain JSX)
-- **Backend:** Node.js + Express (ES modules, `"type": "module"`)
-- **Database:** MongoDB with Mongoose
-- **AI:** Claude API via `@anthropic-ai/sdk` (Sonnet 5)
-- **No TypeScript.** All files are `.js` / `.jsx`.
+- **Frontend:** React 18 + Vite, plain JSX (no TypeScript), `client/`
+- **Backend:** Vercel serverless functions (Node, ES modules), `api/` + shared `lib/`
+- **Data:** synthetic JSON seed files per account in `data/` — **no database**. Captured knowledge is stored in the browser (localStorage) and sent with each request.
+- **Retrieval:** MiniSearch (BM25-style lexical index) exposed to Claude as tools — agentic retrieval, not vector RAG
+- **AI:** Claude Sonnet 5 via `@anthropic-ai/sdk`, adaptive thinking, prompt caching, manual parallel tool-use loop
+- **Hosting:** Vercel (static client + functions). `ANTHROPIC_API_KEY` is a Vercel env var, read only server-side.
 
 ## Project Structure
 
 ```
-├── client/                    # React frontend (Vite)
-│   ├── src/
-│   │   ├── App.jsx            # Top navbar layout + routing
-│   │   ├── index.css          # Global CSS — UST theme (Poppins, teal #006e74)
-│   │   ├── main.jsx           # Entry point
-│   │   ├── services/api.js    # All API calls to backend
-│   │   ├── pages/
-│   │   │   ├── Dashboard.jsx      # Stats overview + quick actions
-│   │   │   ├── BriefPage.jsx      # Generate & view return-from-leave brief
-│   │   │   ├── QAPage.jsx         # Grounded Q&A chat with citations
-│   │   │   ├── CapturePage.jsx    # Knowledge capture from incidents
-│   │   │   ├── InsightsPage.jsx   # Flashcards, Audio, Quiz, Infographic tabs
-│   │   │   └── ConnectorsPage.jsx # Data source connectors + manual entry
-│   │   └── components/
-│   │       ├── Flashcards.jsx     # Flip cards for key events
-│   │       ├── AudioOverview.jsx  # TTS audio briefing with SpeechSynthesis
-│   │       ├── Quiz.jsx           # Multiple-choice retention quiz
-│   │       └── Infographic.jsx    # Visual charts and timeline
-│   └── vite.config.js         # Proxy /api → localhost:3001
-│
-├── server/                    # Express backend
-│   ├── src/
-│   │   ├── index.js           # Server entry, route mounting
-│   │   ├── seed.js            # Seed 33 demo records into MongoDB
-│   │   ├── config/db.js       # Mongoose connection
-│   │   ├── models/
-│   │   │   ├── DataSource.js      # Email, chat, ticket, doc, meeting, calendar
-│   │   │   ├── Brief.js           # Generated brief with sections
-│   │   │   ├── KnowledgeEntry.js  # Captured knowledge articles
-│   │   │   └── Connector.js       # Data source connector configs
-│   │   ├── routes/
-│   │   │   ├── api.js             # Brief, QA, capture, knowledge endpoints
-│   │   │   ├── connectors.js      # CRUD for connectors and data entries
-│   │   │   └── insights.js        # Flashcards, quiz, audio, infographic
-│   │   └── services/
-│   │       ├── claudeClient.js    # Claude SDK init, system prompt, caching, usage tracking
-│   │       ├── dataAdapter.js     # MongoDB query helpers for all source types
-│   │       ├── briefGenerator.js  # Multi-turn tool-use agent for brief generation
-│   │       ├── qaAgent.js         # Grounded Q&A with calibrated refusal
-│   │       ├── captureEngine.js   # Incident → knowledge entry conversion
-│   │       ├── insightsGenerator.js # Flashcard, quiz, audio script generators
-│   │       ├── mockResponses.js   # Pre-built responses for demo mode (no API key)
-│   │       └── mockInsights.js    # Pre-built insights for demo mode
-│   ├── .env                   # MONGODB_URI, PORT (ANTHROPIC_API_KEY optional)
-│   └── .env.example
-│
-└── docs/Media.jpeg            # Architecture diagram
+├── api/                      # Vercel functions (POST only, wrapped by lib/guard.js)
+│   ├── ask.js                # Grounded Q&A (kbMode connected|disconnected)
+│   ├── brief.js              # Return-from-leave brief, streams NDJSON progress
+│   ├── capture.js            # Resolved incident → KB draft
+│   ├── onboarding.js         # New-joiner path + knowledge-ownership map
+│   └── health.js
+├── lib/
+│   ├── claude.js             # Client, cached system prompt, runToolLoop, usage/cost, parseJson
+│   ├── store.js              # Account-scoped JSON adapter + sanitiseEntries (isolation)
+│   ├── search.js             # MiniSearch indexes (swap point for vector/hybrid search)
+│   ├── guard.js              # apiHandler, rate limit, input caps, recorded fallbacks
+│   └── agents/{qa,brief,capture,onboarding}.js
+├── data/
+│   ├── accounts.json         # Accounts, personas, suggested questions, checklists, demo prefill
+│   ├── alpha/*.json          # Helix Retail: emails, chats, tickets, incidents, documents, meetings, calendar, knowledge, people
+│   ├── beta/*.json           # Meridian Freight (same files)
+│   └── <account>/fallbacks/  # Recorded live responses (npm run record)
+├── client/src/
+│   ├── App.jsx               # Landing gate, shell, nav, persona switcher, routes
+│   ├── data.js               # Browser view of the same seed JSON (via @data alias)
+│   ├── context/SessionContext.jsx  # persona, captured KB, incident state, progress, cache, resetDemo
+│   ├── services/api.js       # All API calls (incl. NDJSON stream reader)
+│   ├── pages/                # Landing, Dashboard (Home), BriefPage, QAPage, IncidentsPage, KnowledgePage, OnboardingPage, ConnectorsPage
+│   └── components/           # SourceDrawer (SourceChip, CitedText), AnswerCard, RunMeta, GuidedDemo
+├── scripts/
+│   ├── dev-api.js            # Local stand-in for Vercel: mounts api/*.js on :3001
+│   └── record-fallbacks.js   # Records every demo path from the live API
+└── docs/                     # INTEGRATIONS.md, CLAUDE_CODE_USAGE.md, architecture
 ```
 
 ## How to Run
 
 ```bash
-# 1. Install dependencies
-cd server && npm install
-cd ../client && npm install
-
-# 2. Start MongoDB (must be running on localhost:27017)
-# Already running via brew services or mongod
-
-# 3. Seed demo data
-cd server && node src/seed.js
-
-# 4. Start both (in separate terminals)
-cd server && node src/index.js     # → http://localhost:3001
-cd client && npx vite              # → http://localhost:5173
+npm run install:all          # root + client deps
+cp .env.example .env.local   # add ANTHROPIC_API_KEY
+npm run dev                  # API :3001 + web :5173 (Vite proxies /api)
+npm run record               # optional: refresh recorded fallbacks (~$1–2)
 ```
 
-## Demo Mode vs Live Mode
+Deploy: import the repo in Vercel (build/output come from `vercel.json`), set `ANTHROPIC_API_KEY`, deploy.
 
-The app auto-detects `ANTHROPIC_API_KEY`:
-- **No key set:** Runs in DEMO mode — all Claude features return pre-built mock responses. UI shows "DEMO" badge.
-- **Key set:** Runs in LIVE mode — real Claude API calls. Add to `server/.env`: `ANTHROPIC_API_KEY=sk-ant-...`
+## Demo Scenario (3 personas, 2 isolated accounts)
 
-To get an API key: Sign up at console.anthropic.com (free $5 credits for new accounts).
+- **Priya Sharma** (Alpha, Helix Retail) — back from leave Apr 1–14 2025 → Return brief, grounded Q&A, refusal (Q3 budget)
+- **Vikram Patel** (Alpha) — new joiner Apr 21 → Onboarding path + ownership map, Compare raw vs knowledge layer
+- **Meera Iyer** (Beta, Meridian Freight) — live P2 INC-7310 (FastShip 429s) → ask (refused) → resolve → auto-capture → ask again (answered) → isolation check (INC-4421 refused)
 
-## Design System / Theme
-
-UST-inspired theme. All styling is in `client/src/index.css`.
-
-| Token | Value | Usage |
-|-------|-------|-------|
-| `--primary` | `#006e74` | Brand teal — buttons, links, active states |
-| `--primary-light` | `#f2f7f8` | Light teal backgrounds |
-| `--bg-page` | `#f4f8f9` | Page background |
-| `--bg-card` | `#ffffff` | Card backgrounds |
-| `--border` | `#d7e0e3` | All borders |
-| `--text-primary` | `#161617` | Headings |
-| `--text-secondary` | `#707070` | Body text |
-| `--text-muted` | `#a8a8a8` | Labels, hints |
-| `--success` | `#01b27c` | Green — resolved, connected |
-| `--error` | `#fc6a59` | Coral — incidents, errors |
-| `--warning-dark` | `#a76700` | Amber — high priority, warnings |
-| `--purple` | `#881e87` | Purple — documents |
-
-- **Font:** Poppins (loaded from Google Fonts)
-- **Base font-size:** 16px
-- **Cards:** white bg, 1px border, border-radius 10px, shadow-sm
-- **Buttons:** Primary = teal, pill shape (border-radius 9999px). Secondary = bordered, rounded 6px.
-- **All sizing uses rem values.** Reference scale: headings 1rem, body 0.75rem, small 0.688rem, tiny 0.625rem.
-- **Theme reference project** (for exact patterns): `/Users/196285/Documents/Dev/IJP_SO_creation/UI_new/src`
-
-## Claude AI Architecture
-
-### Model & Configuration
-- **Model:** `claude-sonnet-5` (configured in `claudeClient.js`)
-- **Thinking:** `{ type: "adaptive" }` on every call
-- **Prompt Caching:** System prompt uses `cache_control: { type: "ephemeral" }` — all tool-use rounds reuse cached prefix
-
-### Three AI Agents
-
-**1. Brief Generator** (`briefGenerator.js`)
-- 7 tools: `query_emails`, `query_chats`, `query_tickets`, `query_documents`, `query_meetings`, `query_calendar`, `get_period_stats`
-- Claude autonomously decides which tools to call and in what order
-- Up to 12 rounds of tool calls → synthesizes structured JSON brief
-- Output: 5 sections (Decisions, Work Items, Open Questions, Incidents, Blocked Items)
-
-**2. Q&A Agent** (`qaAgent.js`)
-- 2 tools: `search_data_sources`, `search_knowledge_base`
-- Every answer must cite sourceId — no hallucination
-- Calibrated refusal: if insufficient evidence, refuses and names the gap
-- Confidence levels: high/medium/low/none
-
-**3. Capture Engine** (`captureEngine.js`)
-- Takes an incident ID → reads incident + all related threads
-- Claude generates structured knowledge entry (Problem, Root Cause, Resolution, Prevention)
-- Human confirmation step before publishing
-- Entry immediately queryable via Q&A agent
-
-### Token Usage Tracking
-Every Claude response tracks: `inputTokens`, `outputTokens`, `cacheReadTokens`, `cacheCreationTokens`, `estimatedCost`. Displayed in the UI.
-
-## Key API Endpoints
-
-| Method | Path | What it does |
-|--------|------|-------------|
-| POST | `/api/brief/generate` | Generate return-from-leave brief |
-| GET | `/api/brief/:id` | Get a saved brief |
-| POST | `/api/qa/ask` | Ask a grounded question |
-| POST | `/api/capture/incident` | Capture knowledge from incident |
-| POST | `/api/capture/confirm` | Confirm a draft knowledge entry |
-| GET | `/api/connectors` | List all data connectors with stats |
-| POST | `/api/connectors/data` | Add a data entry via UI |
-| POST | `/api/insights/flashcards` | Generate flashcards |
-| POST | `/api/insights/quiz` | Generate quiz questions |
-| POST | `/api/insights/audio` | Generate audio briefing script |
-| POST | `/api/insights/infographic` | Get infographic data |
-
-## MongoDB Collections
-
-- **datasources** — All ingested data (emails, chats, tickets, docs, meetings, calendar). 33 seed records.
-- **briefs** — Generated leave briefs with sections and token usage.
-- **knowledgeentries** — Captured knowledge articles (draft → confirmed).
-- **connectors** — Data source connector configs and sync status.
-
-## Seed Data Scenario
-
-Demo simulates **Priya Sharma** returning from 2-week leave (Apr 1–14, 2025) on Team Alpha:
-- Payment gateway migration decided (Stripe Connect over Adyen)
-- P1 incident: DB connection pool exhaustion (INC-4421, resolved)
-- Critical CVE patched in auth-service (jsonwebtoken)
-- API rate limiting PR reassigned and design changed
-- New team member Vikram Patel onboarding (starts Apr 21)
-- Client dashboard demo went well, Phase 2 features requested
-- Q2 SLA review upcoming (March uptime below target)
+The INC-7310 fix deliberately exists only in `data/accounts.json → demo.resolutionPrefill`, never in source files.
 
 ## Conventions
 
-- Use inline styles (not CSS classes) for component-specific styling. CSS classes only for reusable patterns (.card, .btn-primary, .badge-*).
-- All API calls go through `client/src/services/api.js`.
-- Mock responses go in `server/src/services/mockResponses.js` and `mockInsights.js`.
-- New pages: add to `client/src/pages/`, register in `App.jsx` nav + routes.
-- New API routes: create in `server/src/routes/`, register in `server/src/index.js`.
-- All new Claude features must work in both LIVE mode (real API) and DEMO mode (mock).
-- Keep the `isLiveMode()` check in routes — never let a missing API key crash the server.
+- **Commit one feature/change at a time** (history is evidence for the Claude Code score).
+- Inline styles for component-specific styling; CSS classes only for reusable patterns (.card, .btn-*, .badge-*). Rem sizes: headings 1rem, body 0.75rem, small 0.688rem, tiny 0.625rem. Theme tokens in `client/src/index.css` (teal `#006e74`, Poppins).
+- All Claude calls go through `lib/claude.js` (`runToolLoop`); all data access through `lib/store.js` with an explicit `account`.
+- Every new API route uses `apiHandler` and `withFallback`; add its path to `scripts/record-fallbacks.js`.
+- Never expose the API key to the client (no `VITE_` prefix). Synthetic data only; no live production integrations.
+- Grounded or silent: cite sourceIds / KB ids; refuse and name the gap and a person when evidence is missing.
 
-## What's Left to Build (Roadmap)
+## Roadmap (not in the prototype)
 
-- Real OAuth connectors for Microsoft Graph / Slack / Jira APIs
-- Video overview feature (animated slide deck from brief data)
-- Knowledge ownership map (who knows what)
-- Exit capture (when someone leaves the team)
-- User authentication and multi-account support
-- Streaming responses for brief generation (show progress in real-time)
-- PDF export of briefs and reports
+Real OAuth adapters (Graph, Slack, Jira, PagerDuty), server-side account index (replacing localStorage), vector/hybrid retrieval behind `lib/search.js`, entitlement-aware retrieval, exit capture, guided incident triage, delivery of the brief into Teams.
