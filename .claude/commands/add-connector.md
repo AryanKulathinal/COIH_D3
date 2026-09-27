@@ -1,37 +1,17 @@
-# Add a real data source connector
+# Add a data source connector
 
-Build a real connector that integrates with an external API to pull data into COIH.
+Connectors follow the adapter pattern: every source is normalised into one record shape, so retrieval, agents and UI never change.
 
-## Architecture
-Connectors follow the adapter pattern. Each connector:
-1. Authenticates with the source system (OAuth, API key, or webhook)
-2. Queries data for a date range
-3. Transforms source-specific format into the COIH `DataSource` schema
-4. Saves to MongoDB
+## Record shape (see lib/store.js)
+`{ sourceType, sourceId, account, timestamp, from, to, subject, channel, body, thread, tags, component, priority, status, mentionsUser, requiresAction, metadata }`
 
-## Implementation Steps
+## For the hackathon (mocked — no live production systems allowed)
+1. Add `data/<account>/<type>.json` with synthetic records in the shape above
+2. Add the type to `SOURCE_FILES` in `lib/store.js` and `client/src/data.js`, and to `SOURCE_TYPES` (label, colour, system name) in `client/src/data.js`
+3. Document the production integration in the `CONNECTORS` list in `client/src/pages/ConnectorsPage.jsx` and in `docs/INTEGRATIONS.md` (API, read-only scope, sync mode, field mapping)
+4. If agents should query it directly, add a tool in `lib/agents/brief.js` (`SOURCE_TOOLS`) and extend the `sourceTypes` enum in `lib/agents/qa.js`
 
-1. Create adapter file: `server/src/adapters/{platform}Adapter.js`
-2. Implement these functions:
-   - `authenticate(config)` — returns auth token/client
-   - `fetchData({ startDate, endDate, userId })` — returns raw data from API
-   - `transform(rawData)` — maps to DataSource schema: `{ sourceType, sourceId, timestamp, from, to, subject, body, tags, priority, status, mentionsUser, requiresAction, metadata }`
-   - `sync(config)` — orchestrates auth → fetch → transform → save
-
-3. Register in `server/src/routes/connectors.js` — add a POST `/:id/sync-live` route
-4. Add the connector to the default connectors list with `authType: "oauth"` or `"api_key"`
-
-## Available APIs
-- **Microsoft Graph** (email + calendar + Teams): `npm install @microsoft/microsoft-graph-client`
-- **Slack Bolt SDK** (chat): `npm install @slack/bolt`
-- **Jira REST API**: `npm install jira-client` or raw fetch
-- **Confluence**: Atlassian REST API
-- **Zoom/Teams recordings**: Respective APIs for meeting transcripts
-
-## Rules
-- Never store API keys in code — use environment variables
-- All connectors must work behind the `isLiveMode()` check
-- Transform must set `account: "demo-account"` for the demo
-- Set `mentionsUser: true` when the data mentions the returning user
+## For production (roadmap)
+Create `lib/adapters/<platform>.js` exporting `fetchSince({ account, since })` and `transform(raw) → record[]`, run it on a schedule or webhook, filter PII before indexing, and write into the account's index. Credentials come from environment variables / a vault, never code.
 
 User request: $ARGUMENTS

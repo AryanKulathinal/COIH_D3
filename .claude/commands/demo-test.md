@@ -1,59 +1,27 @@
 # Test the full demo flow
 
-Run through all 4 demo scenarios and verify they work end-to-end.
+Verify every judge-facing flow end to end, locally (`npm run dev`) or against the hosted URL (set BASE).
 
 ## Pre-checks
-1. Verify MongoDB is running: `pgrep mongod`
-2. Verify server is running: `curl -s http://localhost:3001/health`
-3. Verify client is running: `curl -s http://localhost:5173 | head -3`
-4. Check mode: `curl -s http://localhost:3001/api/mode`
+1. `curl -s $BASE/api/health` → `status: ok`, `claudeConfigured: true`
+2. `curl -s $BASE/ | head -3` returns the SPA
 
-If any service is down, start it. If data is missing, re-seed: `cd server && node src/seed.js`
+## API checks (BASE defaults to http://localhost:3001)
+1. Brief (streams NDJSON — expect `start`, several `tool`, then `done` with `brief.sections`):
+   `curl -sN -X POST $BASE/api/brief -H "Content-Type: application/json" -d '{"accountId":"alpha","personaId":"priya"}'`
+2. Grounded answer: `{"accountId":"alpha","personaId":"priya","question":"Why did we pick Stripe over Adyen?"}` → `answer` with [sourceId] citations, confidence high/medium
+3. Calibrated refusal: `"What is the Q3 budget for the payments team?"` → `answer: null`, `refusal`, `suggestedContact`
+4. Capture loop (Beta):
+   - Ask `"Carrier sync is failing with 429s from FastShip — how do we fix it?"` → refusal / low confidence
+   - `POST /api/capture {"accountId":"beta","incidentId":"INC-7310","resolutionNote":"<prefill from data/accounts.json>"}` → `entry` draft
+   - Ask again with `capturedEntries: [entry with status "confirmed"]` → high confidence citing the new KB id
+5. Isolation: as Meera (`accountId: beta`) ask `"What happened with INC-4421 on orders-db?"` → refusal, no alpha IDs in sources
+6. Compare: Vikram question `"How do we safely rotate the auth signing certificate?"` with `kbMode: "disconnected"` vs `"connected"` → connected cites KB-A-003
+7. Onboarding: `POST /api/onboarding {"accountId":"alpha","personaId":"vikram"}` → `plan.weeks`, `plan.ownershipMap`
 
-## Demo 1: Return-from-Leave Brief
-```bash
-curl -s -X POST http://localhost:3001/api/brief/generate \
-  -H "Content-Type: application/json" \
-  -d '{"userId":"priya.sharma","userName":"Priya Sharma","leaveStart":"2025-04-01","leaveEnd":"2025-04-14"}'
-```
-Verify: response has `overview`, `sections` (decisions, workItems, openQuestions, incidents, blockedItems), `stats`, `tokenUsage`.
+## UI walk-through (use the browser tools)
+Landing → each persona → follow the Guided demo checklist until every item is ticked. Reload after publishing a KB entry — it must persist. Use Reset demo at the end.
 
-## Demo 2: Grounded Q&A
-```bash
-curl -s -X POST http://localhost:3001/api/qa/ask \
-  -H "Content-Type: application/json" \
-  -d '{"question":"What happened with the payment gateway?"}'
-```
-Verify: response has `answer` with [sourceId] citations, `confidence`, `sources` array.
+Report pass/fail per step with timings and any error output.
 
-## Demo 3: Calibrated Refusal
-```bash
-curl -s -X POST http://localhost:3001/api/qa/ask \
-  -H "Content-Type: application/json" \
-  -d '{"question":"What is the client budget for next quarter?"}'
-```
-Verify: response has `answer: null`, `refusal` message, `suggestedSources`.
-
-## Demo 4: Knowledge Capture
-```bash
-curl -s -X POST http://localhost:3001/api/capture/incident \
-  -H "Content-Type: application/json" \
-  -d '{"incidentId":"INC-4421"}'
-```
-Verify: response has `entry` with `title`, `content`, `tags`, `sources`, `status: "draft"`.
-
-## Demo 5: Insights
-```bash
-curl -s -X POST http://localhost:3001/api/insights/flashcards -H "Content-Type: application/json" -d '{"leaveStart":"2025-04-01","leaveEnd":"2025-04-14"}'
-curl -s -X POST http://localhost:3001/api/insights/quiz -H "Content-Type: application/json" -d '{"leaveStart":"2025-04-01","leaveEnd":"2025-04-14"}'
-curl -s -X POST http://localhost:3001/api/insights/audio -H "Content-Type: application/json" -d '{"leaveStart":"2025-04-01","leaveEnd":"2025-04-14"}'
-curl -s -X POST http://localhost:3001/api/insights/infographic -H "Content-Type: application/json" -d '{"leaveStart":"2025-04-01","leaveEnd":"2025-04-14"}'
-```
-
-## Build Check
-```bash
-cd client && npx vite build
-```
-Must pass with 0 errors.
-
-Report results for each demo scenario.
+User request: $ARGUMENTS

@@ -1,37 +1,23 @@
 # Add a new feature to COIH
 
-When adding a new feature, follow this checklist:
-
-## Backend
-1. If it needs Claude AI: add the generator function in `server/src/services/` (follow the pattern in `briefGenerator.js` or `insightsGenerator.js`)
-2. Add mock response in `server/src/services/mockResponses.js` or `mockInsights.js` — the app must work without an API key
-3. Add API route in `server/src/routes/` — always check `isLiveMode()` and return mock data when no API key
-4. Register the route in `server/src/index.js`
+## Backend (Vercel function)
+1. Claude logic goes in `lib/agents/<feature>.js`. Reuse `runToolLoop`, `parseJson` and `CACHED_SYSTEM` from `lib/claude.js`; read data only through `lib/store.js` (always pass `account`).
+2. Create `api/<feature>.js` exporting `apiHandler(async (body, req, res) => …)` from `lib/guard.js` — it enforces POST, the account whitelist and rate limiting. Validate inputs with `requireString`.
+3. Wrap the Claude call in `withFallback(account, fallbackKey("<feature>", …), fn)` and add the path to `scripts/record-fallbacks.js`.
 
 ## Frontend
-1. Add API method in `client/src/services/api.js`
-2. Create the page/component in `client/src/pages/` or `client/src/components/`
-3. Register in `App.jsx` — add to NAV_ITEMS array and Routes
+1. Add the call to `client/src/services/api.js`
+2. Page in `client/src/pages/`, register in `App.jsx` (`NAV_ITEMS` + `Routes`); use `useSession()` for persona/account and `markStep()` for checklist items
+3. Render citations with `SourceChip` / `CitedText` from `components/SourceDrawer.jsx`, and costs with `components/RunMeta.jsx`
 
-## Theme Rules
-- Use the UST theme from `client/src/index.css` — teal primary (#006e74), white cards, Poppins font
-- Use rem values (base 16px): headings 1rem, body 0.75rem, small 0.688rem, tiny 0.625rem
-- Cards: use `.card` class. Buttons: `.btn-primary`, `.btn-secondary`, `.btn-outline`, `.btn-success`
-- Badges: `.badge .badge-{priority}` or `.badge-{status}`
-- Use inline styles for component-specific styling
-
-## Claude AI Rules
-- Model: `claude-sonnet-5` (from `claudeClient.js`)
-- Always use `thinking: { type: "adaptive" }`
-- Always use `CACHED_SYSTEM` for the system prompt (prompt caching)
-- Track token usage with `trackUsage(response)`
-- All answers must be grounded — cite sourceId, never hallucinate
-- Calibrated refusal when evidence is insufficient
+## Rules
+- Model `claude-sonnet-5`, `thinking: { type: "adaptive" }`, cached system prompt — all handled by `runToolLoop`
+- Grounded or silent: cite sourceIds / KB ids; refuse and name the gap when evidence is missing
+- Account-scoped: never read across `data/<account>` folders
+- UST theme (`client/src/index.css`), rem sizes, inline styles for component-specific styling
+- One feature per commit
 
 ## Testing
-1. Restart server: `pkill -f "node src/index.js" && cd server && node src/index.js &`
-2. Build check: `cd client && npx vite build` (must pass with 0 errors)
-3. Test the API endpoint with curl
-4. Verify the UI at http://localhost:5173
+`cd client && npx vite build` must pass; exercise the endpoint with curl via `npm run dev:api`; walk the UI flow.
 
 User request: $ARGUMENTS
