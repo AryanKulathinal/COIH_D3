@@ -1,0 +1,26 @@
+{
+  "answer": null,
+  "refusal": "I don't have sufficient evidence to answer this question. The indexed sources cover emails, chats, tickets, documents, and meeting transcripts from your team's operational data, but they do not contain any financial data such as client budgets, contract values, or pricing information. This type of information would likely be in a separate financial system, CRM, or restricted-access documents that are not part of the current data sources.",
+  "suggestedSources": [
+    "Client contract management system or CRM",
+    "Finance team or account leadership",
+    "Restricted SharePoint folder for commercial documents"
+  ],
+  "confidence": "none",
+  "sources": [],
+  "tokenUsage": {
+    "inputTokens": 6200,
+    "outputTokens": 700,
+    "cacheReadTokens": 3100,
+    "cacheCreationTokens": 0,
+    "estimatedCost": 0.0203,
+    "apiCalls": 2
+  },
+  "rounds": 1,
+  "ms": 6800,
+  "kbMode": "connected",
+  "suggestedContact": {
+    "name": "Raj Kumar",
+    "reason": "Engineering Manager for Team Alpha; budget sits with account leadership, not in operational records"
+  }
+}
