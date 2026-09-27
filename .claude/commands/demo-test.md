@@ -3,7 +3,7 @@
 Verify every judge-facing flow end to end, locally (`npm run dev`) or against the hosted URL (set BASE).
 
 ## Pre-checks
-1. `curl -s $BASE/api/health` → `status: ok`, `claudeConfigured: true`
+1. `curl -s $BASE/api/health` → `status: ok`, `modelConfigured: true`
 2. `curl -s $BASE/ | head -3` returns the SPA
 
 ## API checks (BASE defaults to http://localhost:3001)
