@@ -20,7 +20,7 @@ function Progress({ events }) {
     <div className="card fade-in" style={{ maxWidth: "34rem" }}>
       <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "0.625rem" }}>
         <span className="spinner" />
-        <span style={{ fontSize: "0.813rem", fontWeight: 600, color: "var(--grey-900)" }}>Claude is reconstructing what changed…</span>
+        <span style={{ fontSize: "0.813rem", fontWeight: 600, color: "var(--grey-900)" }}>The hub is reconstructing what changed…</span>
       </div>
       <div style={{ display: "flex", flexDirection: "column", gap: "0.25rem" }}>
         {events.map((e, i) => (
@@ -125,7 +125,7 @@ export default function BriefPage() {
             </div>
           </div>
           <p style={{ fontSize: "0.75rem", color: "var(--text-secondary)", marginBottom: "1rem", lineHeight: 1.6 }}>
-            Claude will query every connected source for the absence window — emails, chats, Jira, incidents, documents, meeting transcripts and the calendar — and reconstruct decisions, reassignments, unanswered threads, incidents and blockers.
+            The brief agent will query every connected source for the absence window — emails, chats, Jira, incidents, documents, meeting transcripts and the calendar — and reconstruct decisions, reassignments, unanswered threads, incidents and blockers.
           </p>
           {error && <div style={{ padding: "0.5rem", borderRadius: "var(--radius-sm)", background: "var(--error-light)", color: "var(--error-dark)", marginBottom: "0.75rem", fontSize: "0.75rem" }}>{error}</div>}
           <button className="btn-primary" onClick={generate} style={{ width: "100%" }}>

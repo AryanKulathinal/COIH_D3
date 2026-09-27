@@ -27,7 +27,7 @@ function DraftReview({ capture, onPublish, onDiscard }) {
         <span className="badge badge-open" style={{ marginLeft: "auto" }}>draft · needs your confirmation</span>
       </div>
       <p style={{ fontSize: "0.625rem", color: "var(--text-muted)", marginBottom: "0.625rem" }}>
-        Claude read {capture.sourcesRead?.length || 0} records ({capture.sourcesRead?.join(", ")}) plus the resolution note. Nobody wrote a wiki page. Edit anything, then publish.
+        The capture engine read {capture.sourcesRead?.length || 0} records ({capture.sourcesRead?.join(", ")}) plus the resolution note. Nobody wrote a wiki page. Edit anything, then publish.
       </p>
       <label style={{ fontSize: "0.625rem", fontWeight: 600, color: "var(--text-muted)" }}>TITLE</label>
       <input value={draft.title || ""} onChange={set("title")} style={{ marginBottom: "0.5rem", fontWeight: 500 }} />

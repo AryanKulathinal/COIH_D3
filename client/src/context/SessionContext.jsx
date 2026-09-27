@@ -61,7 +61,7 @@ export function SessionProvider({ children }) {
     bump();
   }, [personaId]);
 
-  // Per-persona cache of generated results (brief, onboarding) so navigation doesn't re-run Claude.
+  // Per-persona cache of generated results (brief, onboarding) so navigation doesn't re-run the model.
   const getCached = useCallback((key) => read(KEY.cache, {})[`${personaId}:${key}`], [personaId, version]);
   const setCached = useCallback((key, value) => {
     const all = read(KEY.cache, {});
