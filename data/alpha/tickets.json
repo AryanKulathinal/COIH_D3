@@ -1,0 +1,93 @@
+[
+  {
+    "sourceType": "ticket",
+    "sourceId": "JIRA-2847",
+    "account": "alpha",
+    "timestamp": "2025-04-08T10:00:00.000Z",
+    "from": "deepa.nair",
+    "subject": "Implement API Rate Limiting",
+    "body": "Status: In Review. Implemented token bucket rate limiting with Redis backend. Sliding window approach (changed from fixed window). PR #342 ready for review. Assignee changed from priya.sharma to deepa.nair during leave.",
+    "tags": [
+      "api",
+      "rate-limiting",
+      "in-review"
+    ],
+    "priority": "high",
+    "status": "open",
+    "mentionsUser": true,
+    "requiresAction": true,
+    "metadata": {
+      "assignee": "deepa.nair",
+      "originalAssignee": "priya.sharma",
+      "pr": "#342"
+    },
+    "component": "api-gateway"
+  },
+  {
+    "sourceType": "ticket",
+    "sourceId": "JIRA-2901",
+    "account": "alpha",
+    "timestamp": "2025-04-05T14:30:00.000Z",
+    "from": "raj.kumar",
+    "subject": "Intermittent 504s on Inventory API",
+    "body": "Client reported intermittent 504 timeout errors on inventory API endpoints. Seems to happen during peak hours (2-4pm EST). Suspected relation to cache invalidation logic. Escalated to Priya. Priority: High.",
+    "tags": [
+      "bug",
+      "inventory",
+      "client-reported"
+    ],
+    "priority": "high",
+    "status": "open",
+    "mentionsUser": true,
+    "requiresAction": true,
+    "metadata": {
+      "assignee": "priya.sharma",
+      "reporter": "client"
+    },
+    "component": "inventory-api"
+  },
+  {
+    "sourceType": "ticket",
+    "sourceId": "JIRA-2910",
+    "account": "alpha",
+    "timestamp": "2025-04-09T09:00:00.000Z",
+    "from": "raj.kumar",
+    "subject": "Payment Gateway Migration - Stripe Connect Integration",
+    "body": "New epic: Migrate from legacy payment processor to Stripe Connect. Estimated effort: 3 sprints. Key tasks: (1) Stripe SDK integration (2) Payment service adapter update (3) Webhook handlers (4) Testing with sandbox. Priya to lead the adapter work.",
+    "tags": [
+      "payment",
+      "migration",
+      "epic"
+    ],
+    "priority": "high",
+    "status": "open",
+    "mentionsUser": true,
+    "requiresAction": true,
+    "metadata": {
+      "assignee": "priya.sharma",
+      "epic": "Payment Migration"
+    },
+    "component": "payment-service"
+  },
+  {
+    "sourceType": "ticket",
+    "sourceId": "SEC-891",
+    "account": "alpha",
+    "timestamp": "2025-04-11T08:00:00.000Z",
+    "from": "security@ust.com",
+    "subject": "CVE-2025-3102 - jsonwebtoken upgrade",
+    "body": "Critical security vulnerability in jsonwebtoken < 9.0.3. Auth-service upgraded and deployed to production. Verified by Amit Shah on April 13. No exploitation detected.",
+    "tags": [
+      "security",
+      "cve",
+      "resolved"
+    ],
+    "priority": "critical",
+    "status": "resolved",
+    "metadata": {
+      "resolvedBy": "deepa.nair",
+      "verifiedBy": "amit.shah"
+    },
+    "component": "auth-service"
+  }
+]

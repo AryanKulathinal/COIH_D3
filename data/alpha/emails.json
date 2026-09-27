@@ -1,0 +1,202 @@
+[
+  {
+    "sourceType": "email",
+    "sourceId": "email-001",
+    "account": "alpha",
+    "timestamp": "2025-04-02T09:15:00.000Z",
+    "from": "raj.kumar@ust.com",
+    "to": [
+      "priya.sharma",
+      "team-alpha@ust.com"
+    ],
+    "subject": "RE: Payment Gateway Migration - Decision Needed",
+    "body": "Team, after reviewing both options, we've decided to go with Stripe Connect instead of Adyen. The integration timeline is shorter (3 weeks vs 6) and the transaction fees are comparable. Priya — when you're back, we'll need you to update the payment service adapter. CC'ing the architecture board for visibility.",
+    "thread": "thread-payment-migration",
+    "tags": [
+      "payment",
+      "architecture",
+      "decision"
+    ],
+    "priority": "high",
+    "mentionsUser": true,
+    "requiresAction": true,
+    "component": "payment-service"
+  },
+  {
+    "sourceType": "email",
+    "sourceId": "email-002",
+    "account": "alpha",
+    "timestamp": "2025-04-03T11:00:00.000Z",
+    "from": "sarah.chen@client.com",
+    "to": [
+      "team-alpha@ust.com"
+    ],
+    "subject": "Q2 SLA Review Meeting - Rescheduled to April 18",
+    "body": "Hi team, the Q2 SLA review has been moved to April 18th at 2pm EST. Please prepare the uptime metrics for March. We had 99.92% uptime which is below our 99.95% target — need to discuss the two incidents from March 15 and March 28. Sarah",
+    "thread": "thread-sla-review",
+    "tags": [
+      "client",
+      "sla",
+      "meeting"
+    ],
+    "priority": "medium",
+    "mentionsUser": false,
+    "requiresAction": false
+  },
+  {
+    "sourceType": "email",
+    "sourceId": "email-003",
+    "account": "alpha",
+    "timestamp": "2025-04-04T14:30:00.000Z",
+    "from": "mike.johnson@ust.com",
+    "to": [
+      "priya.sharma"
+    ],
+    "subject": "FW: Prod Incident INC-4421 - Database Connection Pool Exhaustion",
+    "body": "Priya, FYI — we had a P1 incident on April 4th. The connection pool on the orders-db hit max connections during a traffic spike. Root cause was the new batch job that wasn't using connection pooling properly. Amit fixed it by adding pgBouncer config. Postmortem scheduled for April 16. Your input on the connection management patterns would be valuable.",
+    "thread": "thread-inc-4421",
+    "tags": [
+      "incident",
+      "database",
+      "p1"
+    ],
+    "priority": "critical",
+    "mentionsUser": true,
+    "requiresAction": true,
+    "component": "orders-db"
+  },
+  {
+    "sourceType": "email",
+    "sourceId": "email-004",
+    "account": "alpha",
+    "timestamp": "2025-04-07T08:45:00.000Z",
+    "from": "hr@ust.com",
+    "to": [
+      "all-associates@ust.com"
+    ],
+    "subject": "Updated Leave Policy - Effective May 1st",
+    "body": "Dear Associates, Please note the updated leave policy effective May 1st. Key changes: (1) Carry-forward limit increased to 10 days (2) Half-day leave now available (3) New wellness days — 2 per quarter. Full policy document attached.",
+    "thread": "thread-hr-policy",
+    "tags": [
+      "hr",
+      "policy"
+    ],
+    "priority": "low",
+    "mentionsUser": false,
+    "requiresAction": false
+  },
+  {
+    "sourceType": "email",
+    "sourceId": "email-005",
+    "account": "alpha",
+    "timestamp": "2025-04-08T10:20:00.000Z",
+    "from": "deepa.nair@ust.com",
+    "to": [
+      "priya.sharma",
+      "team-alpha@ust.com"
+    ],
+    "subject": "RE: API Rate Limiting Implementation",
+    "body": "Priya, I've reassigned JIRA-2847 (API rate limiting) to myself since you're on leave. I've implemented the token bucket algorithm with Redis. PR #342 is up for review. Made a design change — using sliding window instead of fixed window as we discussed. Would appreciate your review when you're back since you designed the original approach.",
+    "thread": "thread-rate-limiting",
+    "tags": [
+      "api",
+      "development",
+      "pr-review"
+    ],
+    "priority": "high",
+    "mentionsUser": true,
+    "requiresAction": true,
+    "component": "api-gateway"
+  },
+  {
+    "sourceType": "email",
+    "sourceId": "email-006",
+    "account": "alpha",
+    "timestamp": "2025-04-09T15:10:00.000Z",
+    "from": "raj.kumar@ust.com",
+    "to": [
+      "team-alpha@ust.com"
+    ],
+    "subject": "Sprint 24 Retrospective Summary",
+    "body": "Team, Sprint 24 retro highlights: What went well: (1) Shipped user notifications on time (2) Zero critical bugs in release. What to improve: (1) Code review turnaround still slow — 2.5 days avg (2) Test coverage dropped to 72%. Action items: Raj to set up review rotation, Deepa to add coverage gates to CI pipeline.",
+    "thread": "thread-sprint-retro",
+    "tags": [
+      "sprint",
+      "retro",
+      "process"
+    ],
+    "priority": "medium",
+    "mentionsUser": false,
+    "requiresAction": false
+  },
+  {
+    "sourceType": "email",
+    "sourceId": "email-007",
+    "account": "alpha",
+    "timestamp": "2025-04-10T09:00:00.000Z",
+    "from": "anita.desai@ust.com",
+    "to": [
+      "priya.sharma"
+    ],
+    "subject": "Knowledge Transfer - Onboarding new team member Vikram",
+    "body": "Hi Priya, Vikram Patel joins our team on April 21. He'll be working on the inventory service which you own. Can you prepare a KT plan covering: (1) Service architecture (2) Deployment pipeline (3) Common failure modes (4) Key contacts at the client end. Let's schedule 3 sessions in his first week.",
+    "thread": "thread-onboarding-vikram",
+    "tags": [
+      "onboarding",
+      "kt",
+      "team"
+    ],
+    "priority": "high",
+    "mentionsUser": true,
+    "requiresAction": true
+  },
+  {
+    "sourceType": "email",
+    "sourceId": "email-008",
+    "account": "alpha",
+    "timestamp": "2025-04-11T13:45:00.000Z",
+    "from": "security@ust.com",
+    "to": [
+      "team-alpha@ust.com"
+    ],
+    "subject": "URGENT: CVE-2025-3102 - Critical vulnerability in jsonwebtoken library",
+    "body": "A critical vulnerability has been discovered in jsonwebtoken versions < 9.0.3. All teams using this library must upgrade immediately. Our scan shows team-alpha's auth-service uses version 8.5.1. Please upgrade to 9.0.3+ and redeploy by April 14. Compliance tracking ticket: SEC-891.",
+    "thread": "thread-security-cve",
+    "tags": [
+      "security",
+      "vulnerability",
+      "urgent"
+    ],
+    "priority": "critical",
+    "mentionsUser": false,
+    "requiresAction": true,
+    "metadata": {
+      "cve": "CVE-2025-3102",
+      "affectedService": "auth-service"
+    },
+    "component": "auth-service"
+  },
+  {
+    "sourceType": "email",
+    "sourceId": "email-009",
+    "account": "alpha",
+    "timestamp": "2025-04-12T10:30:00.000Z",
+    "from": "amit.shah@ust.com",
+    "to": [
+      "priya.sharma",
+      "raj.kumar@ust.com"
+    ],
+    "subject": "RE: Prod Incident INC-4421 - Postmortem draft",
+    "body": "Hi Priya and Raj, I've drafted the postmortem for INC-4421. Key findings: (1) Root cause: batch processor opening new connections per query instead of using pool (2) Impact: 45 min of degraded service, ~200 failed orders (3) Fix: pgBouncer + connection pool config (4) Prevention: add connection count monitoring alert. Draft doc linked in Confluence. Please review before the April 16 meeting.",
+    "thread": "thread-inc-4421",
+    "tags": [
+      "incident",
+      "postmortem",
+      "database"
+    ],
+    "priority": "high",
+    "mentionsUser": true,
+    "requiresAction": true,
+    "component": "orders-db"
+  }
+]

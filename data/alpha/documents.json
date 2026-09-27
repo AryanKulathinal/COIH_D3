@@ -1,0 +1,99 @@
+[
+  {
+    "sourceType": "document",
+    "sourceId": "doc-001",
+    "account": "alpha",
+    "timestamp": "2025-04-09T12:00:00.000Z",
+    "from": "raj.kumar",
+    "subject": "Architecture Decision Record - Payment Gateway Selection",
+    "body": "ADR-015: Selected Stripe Connect over Adyen for payment gateway migration. Decision factors: (1) Integration timeline: Stripe 3 weeks vs Adyen 6 weeks (2) SDK quality: Stripe's Node.js SDK is more mature (3) Transaction fees: comparable at our volume (4) Client preference: neutral. Trade-offs: Stripe has fewer payment methods in APAC region. Mitigation: Phase 2 will add local payment methods via Stripe's expanding coverage.",
+    "tags": [
+      "adr",
+      "architecture",
+      "payment"
+    ],
+    "priority": "high",
+    "component": "payment-service"
+  },
+  {
+    "sourceType": "document",
+    "sourceId": "doc-002",
+    "account": "alpha",
+    "timestamp": "2025-04-12T11:00:00.000Z",
+    "from": "amit.shah",
+    "subject": "Postmortem Draft - INC-4421 Connection Pool Exhaustion",
+    "body": "Incident Summary: On April 4, 2025, the orders-db connection pool was exhausted during a traffic spike coinciding with the new batch job execution. Timeline: 14:00 - Batch job started, 14:15 - Connection count exceeded threshold, 14:20 - Alerts fired, 14:25 - Amit Shah engaged, 14:45 - pgBouncer deployed as interim fix, 15:00 - Service restored. Root Cause: The batch processor was creating new database connections per query rather than using the connection pool. Prevention: (1) Add connection count monitoring with alerting at 80% threshold (2) Mandatory connection pool usage in code review checklist (3) Load testing for new batch jobs before prod deployment.",
+    "tags": [
+      "postmortem",
+      "incident",
+      "database"
+    ],
+    "priority": "high",
+    "component": "orders-db"
+  },
+  {
+    "sourceType": "document",
+    "sourceId": "doc-003",
+    "account": "alpha",
+    "timestamp": "2025-04-10T14:00:00.000Z",
+    "from": "deepa.nair",
+    "subject": "Technical Design - API Rate Limiting",
+    "body": "Design doc for JIRA-2847. Approach: Token bucket algorithm with Redis backend. Changed from fixed window to sliding window after analysis showed fixed window allows burst traffic at window boundaries. Configuration: 100 requests/minute for standard tier, 1000/minute for premium. Redis key pattern: rate:{userId}:{endpoint}. Fallback: In-memory rate limiting if Redis is unavailable. Monitoring: Grafana dashboard with rate limit hit metrics per endpoint.",
+    "tags": [
+      "design",
+      "api",
+      "rate-limiting"
+    ],
+    "priority": "medium",
+    "component": "api-gateway"
+  },
+  {
+    "sourceType": "document",
+    "sourceId": "doc-004",
+    "account": "alpha",
+    "timestamp": "2025-02-10T09:00:00.000Z",
+    "from": "raj.kumar",
+    "subject": "Team Alpha Onboarding Guide",
+    "body": "Welcome to Team Alpha (Helix Retail account). Week 1: get access to GitHub org helix-retail, Jira project ALPHA, Grafana, PagerDuty (shadow rotation only), and the #team-alpha and #alpha-incidents channels. Read the Service Architecture Overview and the On-call Runbook. Pair with a buddy on one in-review PR. Week 2: pick up a starter ticket labelled good-first-issue, attend sprint planning and the Thursday architecture review. Week 3-4: join on-call as shadow, own one small feature end to end. Coding standards: all DB access via db.getPool(), feature flags via LaunchDarkly, every PR needs one reviewer from the owning component.",
+    "tags": [
+      "onboarding",
+      "process",
+      "guide"
+    ],
+    "priority": "medium",
+    "component": "team-process"
+  },
+  {
+    "sourceType": "document",
+    "sourceId": "doc-005",
+    "account": "alpha",
+    "timestamp": "2025-02-12T09:00:00.000Z",
+    "from": "priya.sharma",
+    "subject": "Service Architecture Overview - Helix Retail Platform",
+    "body": "Services: (1) api-gateway - Node.js, rate limiting, auth token validation; owner Deepa Nair. (2) auth-service - JWT issuance and refresh, JWKS endpoint; owner Deepa Nair. (3) payment-service - adapter over the payment processor (moving to Stripe Connect), interface createPayment/getPaymentStatus/refundPayment/listTransactions; owner Priya Sharma. (4) orders-db - PostgreSQL 15 behind pgBouncer, max 100 connections; owner Amit Shah. (5) inventory-api - read-heavy, Redis cache with invalidation on stock events; owner Priya Sharma. (6) checkout-service - uses Redis session cache; owner Amit Shah. (7) client-dashboard - React analytics dashboard for the client; owner Anita Desai. Deploys: GitHub Actions to EKS, blue-green, change freeze Fridays after 3pm.",
+    "tags": [
+      "architecture",
+      "onboarding",
+      "services"
+    ],
+    "priority": "high",
+    "component": "platform"
+  },
+  {
+    "sourceType": "document",
+    "sourceId": "doc-006",
+    "account": "alpha",
+    "timestamp": "2025-02-20T09:00:00.000Z",
+    "from": "amit.shah",
+    "subject": "On-call Runbook - Team Alpha",
+    "body": "Severity: P1 = customer-facing outage or payment failures; page primary and secondary. P2 = degraded performance; page primary. First 10 minutes: acknowledge in PagerDuty, post in #alpha-incidents, check Grafana service overview, check last deploy in GitHub Actions and roll back if within 2 hours. Escalation: Amit Shah (infra/DB), Deepa Nair (auth/API), Priya Sharma (payments/inventory). After resolution: close the incident with a resolution note - the hub captures it into the knowledge base automatically.",
+    "tags": [
+      "runbook",
+      "on-call",
+      "incident",
+      "onboarding"
+    ],
+    "priority": "high",
+    "component": "team-process"
+  }
+]

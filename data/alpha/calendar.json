@@ -1,0 +1,62 @@
+[
+  {
+    "sourceType": "calendar",
+    "sourceId": "cal-001",
+    "account": "alpha",
+    "timestamp": "2025-04-16T10:00:00.000Z",
+    "from": "raj.kumar",
+    "to": [
+      "priya.sharma",
+      "amit.shah"
+    ],
+    "subject": "INC-4421 Postmortem Review",
+    "body": "Postmortem review for the database connection pool incident. Priya's input requested on connection management best practices. Duration: 1 hour.",
+    "tags": [
+      "meeting",
+      "postmortem"
+    ],
+    "priority": "high",
+    "mentionsUser": true,
+    "requiresAction": true
+  },
+  {
+    "sourceType": "calendar",
+    "sourceId": "cal-002",
+    "account": "alpha",
+    "timestamp": "2025-04-18T14:00:00.000Z",
+    "from": "sarah.chen@client.com",
+    "to": [
+      "team-alpha@ust.com"
+    ],
+    "subject": "Q2 SLA Review with Client",
+    "body": "Quarterly SLA review. Agenda: March uptime metrics (99.92% vs 99.95% target), incident review, improvement plan. Duration: 1.5 hours.",
+    "tags": [
+      "meeting",
+      "client",
+      "sla"
+    ],
+    "priority": "high",
+    "mentionsUser": false
+  },
+  {
+    "sourceType": "calendar",
+    "sourceId": "cal-003",
+    "account": "alpha",
+    "timestamp": "2025-04-21T09:00:00.000Z",
+    "from": "anita.desai@ust.com",
+    "to": [
+      "priya.sharma",
+      "vikram.patel@ust.com"
+    ],
+    "subject": "KT Session 1 - Inventory Service Architecture",
+    "body": "First knowledge transfer session for Vikram Patel. Priya to walk through service architecture, deployment pipeline, and key integration points. Duration: 2 hours.",
+    "tags": [
+      "meeting",
+      "onboarding",
+      "kt"
+    ],
+    "priority": "high",
+    "mentionsUser": true,
+    "requiresAction": true
+  }
+]

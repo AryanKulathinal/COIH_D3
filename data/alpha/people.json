@@ -1,0 +1,9 @@
+[
+  { "id": "raj.kumar", "name": "Raj Kumar", "role": "Engineering Manager, Team Alpha", "owns": ["team-process"], "email": "raj.kumar@ust.com" },
+  { "id": "priya.sharma", "name": "Priya Sharma", "role": "Senior Backend Engineer", "owns": ["payment-service", "inventory-api"], "email": "priya.sharma@ust.com" },
+  { "id": "deepa.nair", "name": "Deepa Nair", "role": "Backend Engineer", "owns": ["api-gateway", "auth-service"], "email": "deepa.nair@ust.com" },
+  { "id": "amit.shah", "name": "Amit Shah", "role": "SRE / Infrastructure", "owns": ["orders-db", "checkout-service"], "email": "amit.shah@ust.com" },
+  { "id": "anita.desai", "name": "Anita Desai", "role": "Frontend Engineer", "owns": ["client-dashboard"], "email": "anita.desai@ust.com" },
+  { "id": "vikram.patel", "name": "Vikram Patel", "role": "Backend Engineer (joining Apr 21)", "owns": [], "email": "vikram.patel@ust.com" },
+  { "id": "sarah.chen", "name": "Sarah Chen", "role": "Client Delivery Lead, Helix Retail", "owns": [], "email": "sarah.chen@client.com" }
+]

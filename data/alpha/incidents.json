@@ -1,0 +1,93 @@
+[
+  {
+    "sourceType": "incident",
+    "sourceId": "INC-3987",
+    "account": "alpha",
+    "timestamp": "2025-01-22T15:10:00.000Z",
+    "from": "monitoring-bot",
+    "subject": "P2: Inventory API 504s during flash sale",
+    "body": "Inventory API returned 504s for ~20 minutes during the flash sale. Resolved by amit.shah. Details discussed in #team-alpha huddle.",
+    "tags": [
+      "incident",
+      "inventory",
+      "p2",
+      "resolved"
+    ],
+    "priority": "high",
+    "status": "resolved",
+    "metadata": {
+      "resolvedBy": "amit.shah",
+      "impactDuration": "20 minutes"
+    },
+    "component": "inventory-api"
+  },
+  {
+    "sourceType": "incident",
+    "sourceId": "INC-4198",
+    "account": "alpha",
+    "timestamp": "2025-03-15T13:40:00.000Z",
+    "from": "monitoring-bot",
+    "subject": "P2: Checkout latency spike - session cache evictions",
+    "body": "Checkout p95 latency rose to 4.2s for 35 minutes. Redis session cache evicting keys. Resolved by amit.shah.",
+    "tags": [
+      "incident",
+      "checkout",
+      "redis",
+      "p2",
+      "resolved"
+    ],
+    "priority": "high",
+    "status": "resolved",
+    "metadata": {
+      "resolvedBy": "amit.shah",
+      "impactDuration": "35 minutes"
+    },
+    "component": "checkout-service"
+  },
+  {
+    "sourceType": "incident",
+    "sourceId": "INC-4267",
+    "account": "alpha",
+    "timestamp": "2025-03-28T07:05:00.000Z",
+    "from": "monitoring-bot",
+    "subject": "P1: Login failures after signing certificate rotation",
+    "body": "Token refresh failing for ~18% of users after scheduled signing cert rotation. Resolved by deepa.nair after 50 minutes.",
+    "tags": [
+      "incident",
+      "auth",
+      "security",
+      "p1",
+      "resolved"
+    ],
+    "priority": "critical",
+    "status": "resolved",
+    "metadata": {
+      "resolvedBy": "deepa.nair",
+      "impactDuration": "50 minutes"
+    },
+    "component": "auth-service"
+  },
+  {
+    "sourceType": "incident",
+    "sourceId": "INC-4421",
+    "account": "alpha",
+    "timestamp": "2025-04-04T14:00:00.000Z",
+    "from": "monitoring-bot",
+    "subject": "P1: Database Connection Pool Exhaustion - orders-db",
+    "body": "Incident: Connection pool on orders-db reached maximum (100 connections). Impact: 45 minutes of degraded service, ~200 failed order transactions. Root cause: New batch processor opening individual connections instead of using pool. Resolution: Deployed pgBouncer, fixed batch processor connection handling. Postmortem scheduled April 16.",
+    "tags": [
+      "incident",
+      "database",
+      "p1",
+      "resolved"
+    ],
+    "priority": "critical",
+    "status": "resolved",
+    "metadata": {
+      "resolvedBy": "amit.shah",
+      "impactDuration": "45 minutes",
+      "affectedOrders": 200
+    },
+    "component": "orders-db"
+  }
+]

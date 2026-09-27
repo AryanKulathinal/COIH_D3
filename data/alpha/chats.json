@@ -1,0 +1,156 @@
+[
+  {
+    "sourceType": "chat",
+    "sourceId": "chat-001",
+    "account": "alpha",
+    "timestamp": "2025-04-02T10:30:00.000Z",
+    "from": "raj.kumar",
+    "channel": "#team-alpha",
+    "body": "Hey team, client wants to demo the new dashboard to their CTO next Friday. @deepa.nair can you make sure the real-time charts are working with live data by Thursday?",
+    "thread": "thread-chat-dashboard",
+    "tags": [
+      "client",
+      "demo",
+      "dashboard"
+    ],
+    "priority": "high",
+    "mentionsUser": false,
+    "component": "client-dashboard"
+  },
+  {
+    "sourceType": "chat",
+    "sourceId": "chat-002",
+    "account": "alpha",
+    "timestamp": "2025-04-02T10:35:00.000Z",
+    "from": "deepa.nair",
+    "channel": "#team-alpha",
+    "body": "On it! The WebSocket connection is already set up. Just need to wire the chart components to the live feed. Should be done by Wednesday.",
+    "thread": "thread-chat-dashboard",
+    "tags": [
+      "dashboard",
+      "websocket"
+    ],
+    "priority": "medium",
+    "mentionsUser": false,
+    "component": "client-dashboard"
+  },
+  {
+    "sourceType": "chat",
+    "sourceId": "chat-003",
+    "account": "alpha",
+    "timestamp": "2025-04-03T09:00:00.000Z",
+    "from": "amit.shah",
+    "channel": "#team-alpha",
+    "body": "Heads up — the staging environment is down. AWS is reporting an EC2 issue in us-east-1. ETA from AWS: 2 hours.",
+    "thread": "thread-chat-staging-down",
+    "tags": [
+      "infra",
+      "aws",
+      "staging"
+    ],
+    "priority": "high",
+    "mentionsUser": false
+  },
+  {
+    "sourceType": "chat",
+    "sourceId": "chat-004",
+    "account": "alpha",
+    "timestamp": "2025-04-05T14:00:00.000Z",
+    "from": "raj.kumar",
+    "channel": "#team-alpha",
+    "body": "@priya.sharma FYI - I've escalated JIRA-2901 to you. Client reported intermittent 504s on the inventory API. Looks like it might be related to the cache invalidation logic you implemented. Can you take a look when you're back?",
+    "thread": "thread-chat-504s",
+    "tags": [
+      "bug",
+      "inventory",
+      "escalation"
+    ],
+    "priority": "high",
+    "mentionsUser": true,
+    "requiresAction": true,
+    "component": "inventory-api"
+  },
+  {
+    "sourceType": "chat",
+    "sourceId": "chat-005",
+    "account": "alpha",
+    "timestamp": "2025-04-07T11:20:00.000Z",
+    "from": "deepa.nair",
+    "channel": "#team-alpha",
+    "body": "Dashboard demo went great! Client CTO loved the real-time analytics. They want to add predictive inventory alerts as a Phase 2 feature. @raj.kumar can you add this to the backlog?",
+    "thread": "thread-chat-dashboard",
+    "tags": [
+      "client",
+      "demo",
+      "success"
+    ],
+    "priority": "medium",
+    "mentionsUser": false
+  },
+  {
+    "sourceType": "chat",
+    "sourceId": "chat-006",
+    "account": "alpha",
+    "timestamp": "2025-04-08T16:45:00.000Z",
+    "from": "amit.shah",
+    "channel": "#incidents",
+    "body": "INC-4421 RESOLVED. Connection pool exhaustion fixed. pgBouncer deployed to prod. Monitoring confirms stable connections at ~60% pool utilization. Full RCA in the postmortem doc.",
+    "thread": "thread-chat-inc-4421",
+    "tags": [
+      "incident",
+      "resolved"
+    ],
+    "priority": "high",
+    "mentionsUser": false
+  },
+  {
+    "sourceType": "chat",
+    "sourceId": "chat-007",
+    "account": "alpha",
+    "timestamp": "2025-04-10T09:30:00.000Z",
+    "from": "raj.kumar",
+    "channel": "#team-alpha",
+    "body": "Team standup notes: Sprint 25 started. Key items: (1) Payment gateway migration kickoff (2) API rate limiting PR needs review (3) Security CVE patch for auth-service. @priya.sharma has 3 items waiting for her return.",
+    "thread": "thread-chat-standup",
+    "tags": [
+      "standup",
+      "sprint"
+    ],
+    "priority": "medium",
+    "mentionsUser": true
+  },
+  {
+    "sourceType": "chat",
+    "sourceId": "chat-008",
+    "account": "alpha",
+    "timestamp": "2025-04-11T14:00:00.000Z",
+    "from": "deepa.nair",
+    "channel": "#team-alpha",
+    "body": "I've patched the jsonwebtoken CVE in auth-service. PR #345 is merged and deployed to staging. Production deploy scheduled for tomorrow morning. @amit.shah can you monitor after deploy?",
+    "thread": "thread-chat-cve-fix",
+    "tags": [
+      "security",
+      "deployment"
+    ],
+    "priority": "high",
+    "mentionsUser": false,
+    "component": "auth-service"
+  },
+  {
+    "sourceType": "chat",
+    "sourceId": "chat-009",
+    "account": "alpha",
+    "timestamp": "2025-04-13T10:00:00.000Z",
+    "from": "amit.shah",
+    "channel": "#team-alpha",
+    "body": "CVE patch deployed to prod successfully. All auth flows verified. No issues reported. SEC-891 marked as resolved.",
+    "thread": "thread-chat-cve-fix",
+    "tags": [
+      "security",
+      "resolved"
+    ],
+    "priority": "medium",
+    "mentionsUser": false,
+    "component": "auth-service"
+  }
+]

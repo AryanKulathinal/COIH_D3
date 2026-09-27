@@ -1,0 +1,119 @@
+[
+  {
+    "sourceType": "meeting",
+    "sourceId": "meet-001",
+    "account": "alpha",
+    "timestamp": "2025-04-03T10:00:00.000Z",
+    "from": "raj.kumar",
+    "to": [
+      "deepa.nair",
+      "amit.shah",
+      "anita.desai@ust.com"
+    ],
+    "subject": "Sprint 24 Planning - Team Alpha",
+    "body": "MEETING TRANSCRIPT (Auto-generated from Teams recording)\nDuration: 45 minutes | Attendees: Raj Kumar, Deepa Nair, Amit Shah, Anita Desai\n\n[00:02] Raj: Let's start with the sprint review. Priya is on leave so I'll cover her items. The payment gateway decision is finalized — we're going with Stripe Connect.\n\n[00:05] Deepa: I can pick up the API rate limiting ticket JIRA-2847 while Priya is away. I was thinking of changing the approach from fixed window to sliding window — fixed window has a burst problem at boundaries.\n\n[00:08] Raj: Good call. Make sure to document the design change so Priya can review when she's back.\n\n[00:12] Amit: Quick update on infra — we're seeing some connection pool pressure on orders-db during peak hours. I'm monitoring it but we might need to add pgBouncer.\n\n[00:15] Raj: Keep an eye on it. If it gets worse, page me.\n\n[00:20] Anita: New joiner update — Vikram Patel is confirmed to start April 21. He'll be on inventory service, which is Priya's domain. We need to plan KT sessions.\n\n[00:25] Raj: Let's block 3 sessions in Vikram's first week. Priya, Amit, and I will split the topics.\n\n[00:30] Deepa: Client demo for the dashboard is Friday. The real-time charts are almost ready — just need to wire WebSocket to live data feed.\n\n[00:35] Raj: Priority for this week: (1) Dashboard demo prep (2) Rate limiting PR (3) Monitor db connections. Let's sync daily on the dashboard progress.\n\nACTION ITEMS:\n- Deepa: Pick up JIRA-2847, change to sliding window approach\n- Amit: Monitor orders-db connection pool, add pgBouncer if needed\n- Raj: Plan KT sessions for Vikram\n- Deepa: Complete dashboard charts for Friday demo",
+    "tags": [
+      "sprint-planning",
+      "meeting",
+      "decisions",
+      "action-items"
+    ],
+    "priority": "high",
+    "mentionsUser": true,
+    "metadata": {
+      "duration": "45 min",
+      "platform": "Microsoft Teams",
+      "recordingUrl": "https://teams.microsoft.com/recording/meet-001",
+      "hasVideo": true
+    }
+  },
+  {
+    "sourceType": "meeting",
+    "sourceId": "meet-002",
+    "account": "alpha",
+    "timestamp": "2025-04-07T14:00:00.000Z",
+    "from": "raj.kumar",
+    "to": [
+      "deepa.nair",
+      "amit.shah",
+      "sarah.chen@client.com"
+    ],
+    "subject": "Client Dashboard Demo - Debrief",
+    "body": "MEETING TRANSCRIPT (Auto-generated from Teams recording)\nDuration: 30 minutes | Attendees: Raj Kumar, Deepa Nair, Amit Shah, Sarah Chen (Client)\n\n[00:02] Raj: Great demo today. Sarah, any initial feedback from the CTO?\n\n[00:04] Sarah: He loved the real-time analytics view. Two requests: (1) Can we add predictive inventory alerts? Like \"based on current trends, SKU X will be out of stock in 3 days.\" (2) Can we get an export-to-PDF feature for the monthly reports?\n\n[00:08] Deepa: Predictive alerts would need a forecasting model. We could start with a simple moving average and iterate. I'd estimate 2-3 sprints for a solid v1.\n\n[00:12] Raj: Let's add it to the Phase 2 backlog. Sarah, we'll scope it formally and get back to you by end of next week.\n\n[00:15] Sarah: Perfect. Also, reminder that the Q2 SLA review is April 18. We need to discuss the March incidents — uptime was 99.92% versus our 99.95% target.\n\n[00:20] Amit: I'm preparing the incident report. The two downtimes were the auth-service blip on March 15 (3 minutes) and the DNS issue on March 28 (12 minutes). Both have been addressed.\n\n[00:25] Raj: Good. Let's have a prep meeting on April 17 to rehearse. We need a solid improvement plan to present.\n\nACTION ITEMS:\n- Raj: Add predictive alerts to Phase 2 backlog, send scope estimate to Sarah by April 14\n- Deepa: Research forecasting approaches for inventory alerts\n- Amit: Prepare March incident report for SLA review\n- Raj: Schedule SLA prep meeting for April 17",
+    "tags": [
+      "client",
+      "demo",
+      "dashboard",
+      "feedback",
+      "action-items"
+    ],
+    "priority": "high",
+    "mentionsUser": false,
+    "metadata": {
+      "duration": "30 min",
+      "platform": "Microsoft Teams",
+      "recordingUrl": "https://teams.microsoft.com/recording/meet-002",
+      "hasVideo": true
+    },
+    "component": "client-dashboard"
+  },
+  {
+    "sourceType": "meeting",
+    "sourceId": "meet-003",
+    "account": "alpha",
+    "timestamp": "2025-04-09T11:00:00.000Z",
+    "from": "raj.kumar",
+    "to": [
+      "deepa.nair",
+      "amit.shah"
+    ],
+    "subject": "Architecture Review - Payment Gateway Migration",
+    "body": "MEETING TRANSCRIPT (Auto-generated from Zoom recording)\nDuration: 60 minutes | Attendees: Raj Kumar, Deepa Nair, Amit Shah\n\n[00:03] Raj: Today we're finalizing the architecture for the Stripe Connect migration. I've documented the decision in ADR-015. Let's walk through the integration plan.\n\n[00:08] Amit: I've reviewed the Stripe SDK. Their Node.js library is solid. We need to handle: (1) Payment intents for one-time charges (2) Subscription management (3) Webhook handlers for async events like disputes and refunds.\n\n[00:15] Raj: What about the adapter pattern? Priya designed the current payment service adapter — we need to keep the same interface so upstream services aren't affected.\n\n[00:18] Deepa: I looked at the current adapter. It has 4 main methods: createPayment, getPaymentStatus, refundPayment, and listTransactions. We should be able to swap the implementation behind those interfaces without touching callers.\n\n[00:25] Raj: Good. Priya will lead the adapter work when she's back. Amit, can you start on the webhook handlers this sprint? Those are independent of the adapter.\n\n[00:30] Amit: Sure. I'll set up the webhook endpoint with signature verification. We need a dead letter queue for failed webhook processing.\n\n[00:40] Raj: Testing strategy — we'll use Stripe's sandbox environment. Let's also add integration tests that run against the sandbox in CI.\n\n[00:50] Deepa: One risk: Stripe has fewer payment methods in APAC compared to Adyen. Should we flag this to the client?\n\n[00:53] Raj: Good point. I'll add it to the ADR as a known trade-off. Stripe is expanding APAC coverage, so Phase 2 can address this.\n\nDECISIONS:\n- Keep the existing adapter interface (createPayment, getPaymentStatus, refundPayment, listTransactions)\n- Amit starts webhook handlers this sprint, Priya leads adapter swap when back\n- Use Stripe sandbox for testing, add integration tests to CI\n- APAC payment method gap accepted as known trade-off, addressed in Phase 2\n\nACTION ITEMS:\n- Amit: Set up Stripe webhook endpoint with signature verification + DLQ\n- Priya (when back): Lead payment adapter implementation, swap behind existing interface\n- Raj: Update ADR-015 with APAC trade-off, flag to client\n- Deepa: Add Stripe sandbox integration tests to CI pipeline",
+    "tags": [
+      "architecture",
+      "payment",
+      "stripe",
+      "decisions",
+      "migration"
+    ],
+    "priority": "high",
+    "mentionsUser": true,
+    "requiresAction": true,
+    "metadata": {
+      "duration": "60 min",
+      "platform": "Zoom",
+      "recordingUrl": "https://zoom.us/recording/meet-003",
+      "hasVideo": true
+    },
+    "component": "payment-service"
+  },
+  {
+    "sourceType": "meeting",
+    "sourceId": "meet-004",
+    "account": "alpha",
+    "timestamp": "2025-04-11T09:30:00.000Z",
+    "from": "amit.shah",
+    "to": [
+      "raj.kumar",
+      "deepa.nair"
+    ],
+    "subject": "Incident INC-4421 Hot Debrief",
+    "body": "MEETING TRANSCRIPT (Auto-generated from Teams recording)\nDuration: 25 minutes | Attendees: Amit Shah, Raj Kumar, Deepa Nair\n\n[00:02] Amit: Quick debrief on the connection pool incident from April 4. I've stabilized it with pgBouncer but want to walk through what happened.\n\n[00:05] Amit: The new batch job for order reconciliation was opening a fresh DB connection for every single query. During peak traffic at 2pm, this pushed us past the 100-connection limit. 45 minutes of degraded service, about 200 failed orders.\n\n[00:10] Raj: How did we miss this in code review?\n\n[00:12] Amit: The batch job was reviewed but the reviewer didn't catch that it was using the raw pg client instead of our pool wrapper. We need a lint rule or code review checklist item for this.\n\n[00:15] Deepa: I can add a custom ESLint rule that flags direct pg.Client usage outside the pool module.\n\n[00:18] Raj: Good. Also, we need Priya's input on the connection management patterns for the postmortem. She designed the pool wrapper originally.\n\n[00:22] Amit: I'll write up the full postmortem draft and schedule the review for April 16. Priya should be back by then.\n\nACTION ITEMS:\n- Amit: Write postmortem draft, schedule April 16 review\n- Deepa: Create ESLint rule for direct pg.Client usage detection\n- Raj: Add \"connection pool usage\" to code review checklist\n- Priya (when back): Review postmortem, advise on connection management patterns",
+    "tags": [
+      "incident",
+      "postmortem",
+      "database",
+      "debrief"
+    ],
+    "priority": "high",
+    "mentionsUser": true,
+    "requiresAction": true,
+    "metadata": {
+      "duration": "25 min",
+      "platform": "Microsoft Teams",
+      "recordingUrl": "https://teams.microsoft.com/recording/meet-004",
+      "hasVideo": true
+    },
+    "component": "orders-db"
+  }
+]
