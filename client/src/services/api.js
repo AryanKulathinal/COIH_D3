@@ -1,9 +1,10 @@
 const BASE = "/api";
 
-async function request(url, options = {}) {
+async function request(url, body) {
   const res = await fetch(`${BASE}${url}`, {
-    headers: { "Content-Type": "application/json", ...options.headers },
-    ...options,
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(body),
   });
   if (!res.ok) {
     const err = await res.json().catch(() => ({ error: res.statusText }));
@@ -12,24 +13,41 @@ async function request(url, options = {}) {
   return res.json();
 }
 
-export const api = {
-  getMode: () => request("/mode"),
-  generateBrief: (data) => request("/brief/generate", { method: "POST", body: JSON.stringify(data) }),
-  getBrief: (id) => request(`/brief/${id}`),
-  getBriefs: () => request("/briefs"),
-  askQuestion: (data) => request("/qa/ask", { method: "POST", body: JSON.stringify(data) }),
-  captureIncident: (incidentId) => request("/capture/incident", { method: "POST", body: JSON.stringify({ incidentId }) }),
-  confirmEntry: (data) => request("/capture/confirm", { method: "POST", body: JSON.stringify(data) }),
-  getKnowledge: () => request("/knowledge"),
-  getStats: () => request("/data-sources/stats"),
-  getIncidents: () => request("/data-sources/incidents"),
+// Reads the NDJSON progress stream from /api/brief, calling onEvent for each line.
+async function streamBrief(body, onEvent) {
+  const res = await fetch(`${BASE}/brief`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(body),
+  });
+  if (!res.ok || !res.body) {
+    const err = await res.json().catch(() => ({ error: res.statusText }));
+    throw new Error(err.error || "Request failed");
+  }
+  const reader = res.body.getReader();
+  const decoder = new TextDecoder();
+  let buffer = "";
+  let final = null;
+  for (;;) {
+    const { value, done } = await reader.read();
+    if (done) break;
+    buffer += decoder.decode(value, { stream: true });
+    const lines = buffer.split("\n");
+    buffer = lines.pop();
+    for (const line of lines.filter(Boolean)) {
+      const event = JSON.parse(line);
+      onEvent?.(event);
+      if (event.type === "done") final = event;
+      if (event.type === "error") throw new Error(event.error);
+    }
+  }
+  if (!final) throw new Error("Brief stream ended unexpectedly");
+  return final;
+}
 
-  getConnectors: () => request("/connectors"),
-  toggleConnector: (id) => request(`/connectors/${id}/toggle`, { method: "PUT" }),
-  syncConnector: (id) => request(`/connectors/${id}/sync`, { method: "POST" }),
-  addConnector: (data) => request("/connectors", { method: "POST", body: JSON.stringify(data) }),
-  addDataEntry: (data) => request("/connectors/data", { method: "POST", body: JSON.stringify(data) }),
-  addDataBulk: (items) => request("/connectors/data/bulk", { method: "POST", body: JSON.stringify({ items }) }),
-  getDataEntries: (sourceType, limit) => request(`/connectors/data?sourceType=${sourceType || ""}&limit=${limit || 50}`),
-  deleteDataEntry: (id) => request(`/connectors/data/${id}`, { method: "DELETE" }),
+export const api = {
+  ask: (body) => request("/ask", body),
+  capture: (body) => request("/capture", body),
+  onboarding: (body) => request("/onboarding", body),
+  streamBrief,
 };

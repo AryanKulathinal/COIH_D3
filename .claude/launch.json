@@ -1,0 +1,29 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "coih-api",
+      "runtimeExecutable": "node",
+      "runtimeArgs": [
+        "--watch-path=api",
+        "--watch-path=lib",
+        "scripts/dev-api.js"
+      ],
+      "port": 3001
+    },
+    {
+      "name": "coih-web",
+      "runtimeExecutable": "node",
+      "runtimeArgs": [
+        "client/node_modules/vite/bin/vite.js",
+        "client",
+        "--config",
+        "client/vite.config.js",
+        "--port",
+        "5173",
+        "--strictPort"
+      ],
+      "port": 5173
+    }
+  ]
+}
