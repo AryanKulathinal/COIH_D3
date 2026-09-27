@@ -1,0 +1,58 @@
+[
+  {
+    "sourceType": "chat", "sourceId": "chat-b01", "account": "beta",
+    "timestamp": "2025-04-15T08:52:00.000Z", "from": "monitoring-bot", "channel": "#beta-ops",
+    "body": "ALERT carrier-sync: 38% of FastShip label requests failing with HTTP 429 Too Many Requests since 08:40. Label backlog: 1,150.",
+    "thread": "thread-inc-7310", "tags": ["alert", "carrier-sync", "fastship", "429"],
+    "priority": "high", "component": "carrier-sync"
+  },
+  {
+    "sourceType": "chat", "sourceId": "chat-b02", "account": "beta",
+    "timestamp": "2025-04-15T09:05:00.000Z", "from": "karthik.rao", "channel": "#beta-ops",
+    "body": "Looking. Probably our retry loop hammering them after a blip - restarting carrier-sync workers.",
+    "thread": "thread-inc-7310", "tags": ["carrier-sync", "429", "triage"], "component": "carrier-sync"
+  },
+  {
+    "sourceType": "chat", "sourceId": "chat-b03", "account": "beta",
+    "timestamp": "2025-04-15T09:28:00.000Z", "from": "karthik.rao", "channel": "#beta-ops",
+    "body": "Restart did not help, failure rate back to 35% within 10 minutes. Could FastShip be having an outage?",
+    "thread": "thread-inc-7310", "tags": ["carrier-sync", "429", "triage"], "component": "carrier-sync"
+  },
+  {
+    "sourceType": "chat", "sourceId": "chat-b04", "account": "beta",
+    "timestamp": "2025-04-15T09:40:00.000Z", "from": "farah.ali", "channel": "#beta-ops",
+    "body": "FastShip status page is all green, no reported incidents.",
+    "thread": "thread-inc-7310", "tags": ["carrier-sync", "fastship", "triage"], "component": "carrier-sync"
+  },
+  {
+    "sourceType": "chat", "sourceId": "chat-b05", "account": "beta",
+    "timestamp": "2025-04-15T09:55:00.000Z", "from": "sanjay.menon", "channel": "#beta-ops",
+    "body": "Did anything change on our side? Last deploy was Friday and it was notifications-service only.",
+    "thread": "thread-inc-7310", "tags": ["carrier-sync", "triage"], "component": "carrier-sync"
+  },
+  {
+    "sourceType": "chat", "sourceId": "chat-b06", "account": "beta",
+    "timestamp": "2025-04-15T10:20:00.000Z", "from": "karthik.rao", "channel": "#beta-ops",
+    "body": "Scaled carrier-sync from 4 to 8 workers to drain the backlog faster.",
+    "thread": "thread-inc-7310", "tags": ["carrier-sync", "scaling", "triage"], "component": "carrier-sync"
+  },
+  {
+    "sourceType": "chat", "sourceId": "chat-b07", "account": "beta",
+    "timestamp": "2025-04-15T10:45:00.000Z", "from": "meera.iyer", "channel": "#beta-ops",
+    "body": "Backlog is now 4,200 labels and failure rate is up to 52%. Warehouse Dock 3 is waiting on labels. Raising INC-7310 to P2.",
+    "thread": "thread-inc-7310", "tags": ["carrier-sync", "429", "escalation"],
+    "priority": "high", "mentionsUser": true, "component": "carrier-sync"
+  },
+  {
+    "sourceType": "chat", "sourceId": "chat-b08", "account": "beta",
+    "timestamp": "2025-04-02T15:20:00.000Z", "from": "sanjay.menon", "channel": "#beta-dev",
+    "body": "Route optimizer timeouts fixed: routes over 400 stops are now split into clusters with a k-means pre-pass before solving, and the solver time limit went from 8s to 20s. Deployed to prod, p99 back under 12s. Nobody else has touched the clustering code, so ping me if it misbehaves.",
+    "thread": "thread-inc-7244", "tags": ["route-optimizer", "timeout", "fix"], "component": "route-optimizer"
+  },
+  {
+    "sourceType": "chat", "sourceId": "chat-b09", "account": "beta",
+    "timestamp": "2025-04-10T12:00:00.000Z", "from": "meera.iyer", "channel": "#beta-dev",
+    "body": "OR-Tools spike looks good: 18% shorter routes on the Chicago dataset, solve time comparable. Writing up the design next.",
+    "thread": "thread-b-ortools", "tags": ["route-optimizer", "or-tools"], "component": "route-optimizer"
+  }
+]

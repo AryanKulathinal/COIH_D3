@@ -1,0 +1,38 @@
+[
+  {
+    "sourceType": "ticket", "sourceId": "JIRA-B-512", "account": "beta",
+    "timestamp": "2025-04-09T12:00:00.000Z", "from": "sanjay.menon",
+    "subject": "Migrate route-optimizer to OR-Tools v9",
+    "body": "Replace legacy solver with OR-Tools v9 behind feature flag route-optimizer-ortools. Include benchmark on Chicago and Dallas datasets. Target May 2.",
+    "tags": ["route-optimizer", "or-tools", "migration"],
+    "priority": "high", "status": "open", "mentionsUser": true, "requiresAction": true,
+    "metadata": { "assignee": "meera.iyer" }, "component": "route-optimizer"
+  },
+  {
+    "sourceType": "ticket", "sourceId": "JIRA-B-530", "account": "beta",
+    "timestamp": "2025-04-12T09:00:00.000Z", "from": "farah.ali",
+    "subject": "tracking-api p95 latency regression",
+    "body": "tracking-api p95 went from 620ms to 910ms after the April 8 release, above the 800ms SLA. Suspect N+1 query on shipment events.",
+    "tags": ["tracking-api", "latency", "sla"],
+    "priority": "high", "status": "open", "requiresAction": true,
+    "metadata": { "assignee": "karthik.rao" }, "component": "tracking-api"
+  },
+  {
+    "sourceType": "ticket", "sourceId": "JIRA-B-541", "account": "beta",
+    "timestamp": "2025-04-08T10:00:00.000Z", "from": "sanjay.menon",
+    "subject": "Peak season 2025 capacity plan",
+    "body": "Produce capacity plan for 3x volume: carrier quotas, carrier-sync worker sizing, tracking-api autoscaling. Due April 22 for the client.",
+    "tags": ["capacity", "peak-season", "planning"],
+    "priority": "high", "status": "open", "requiresAction": true,
+    "metadata": { "assignee": "sanjay.menon" }, "component": "carrier-sync"
+  },
+  {
+    "sourceType": "ticket", "sourceId": "JIRA-B-498", "account": "beta",
+    "timestamp": "2025-04-03T14:00:00.000Z", "from": "farah.ali",
+    "subject": "Returns notification email templates",
+    "body": "New email templates for return-label notifications. Done and deployed April 11.",
+    "tags": ["notifications", "returns"],
+    "priority": "low", "status": "closed",
+    "metadata": { "assignee": "farah.ali" }, "component": "notifications-service"
+  }
+]

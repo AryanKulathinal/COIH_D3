@@ -1,0 +1,7 @@
+[
+  { "id": "sanjay.menon", "name": "Sanjay Menon", "role": "Tech Lead, Team Beta", "owns": ["route-optimizer"], "email": "sanjay.menon@ust.com" },
+  { "id": "karthik.rao", "name": "Karthik Rao", "role": "SRE / On-call lead", "owns": ["carrier-sync", "tracking-api"], "email": "karthik.rao@ust.com" },
+  { "id": "meera.iyer", "name": "Meera Iyer", "role": "Integration Engineer", "owns": ["route-optimizer"], "email": "meera.iyer@ust.com" },
+  { "id": "farah.ali", "name": "Farah Ali", "role": "QA / Notifications", "owns": ["notifications-service"], "email": "farah.ali@ust.com" },
+  { "id": "lina.park", "name": "Lina Park", "role": "Client Program Manager, Meridian Freight", "owns": [], "email": "lina.park@meridian-client.com" }
+]

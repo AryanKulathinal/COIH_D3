@@ -1,0 +1,29 @@
+[
+  {
+    "sourceType": "incident", "sourceId": "INC-7188", "account": "beta",
+    "timestamp": "2025-03-20T11:00:00.000Z", "from": "monitoring-bot",
+    "subject": "P2: tracking-api 502s after WMS webhook flood",
+    "body": "tracking-api returned 502s for 25 minutes after the warehouse WMS replayed 60k webhook events. Resolved by karthik.rao.",
+    "tags": ["incident", "tracking-api", "webhook", "p2", "resolved"],
+    "priority": "high", "status": "resolved",
+    "metadata": { "resolvedBy": "karthik.rao", "impactDuration": "25 minutes" }, "component": "tracking-api"
+  },
+  {
+    "sourceType": "incident", "sourceId": "INC-7244", "account": "beta",
+    "timestamp": "2025-04-02T09:30:00.000Z", "from": "monitoring-bot",
+    "subject": "P3: route-optimizer timeouts on large routes",
+    "body": "route-optimizer requests for routes with more than ~500 stops timing out at 8s. Resolved by sanjay.menon on Apr 2 (see #beta-dev).",
+    "thread": "thread-inc-7244", "tags": ["incident", "route-optimizer", "timeout", "p3", "resolved"],
+    "priority": "medium", "status": "resolved",
+    "metadata": { "resolvedBy": "sanjay.menon" }, "component": "route-optimizer"
+  },
+  {
+    "sourceType": "incident", "sourceId": "INC-7310", "account": "beta",
+    "timestamp": "2025-04-15T08:52:00.000Z", "from": "monitoring-bot",
+    "subject": "P2: carrier-sync FastShip label requests failing with 429",
+    "body": "FastShip label API returning HTTP 429 for 35-52% of requests since 08:40. Label backlog growing, warehouse Dock 3 blocked. Hypotheses so far: retry storm (restart did not help), FastShip outage (status page green). Workers scaled 4 to 8. Status: investigating. On-call: karthik.rao.",
+    "thread": "thread-inc-7310", "tags": ["incident", "carrier-sync", "fastship", "429", "p2"],
+    "priority": "high", "status": "open",
+    "metadata": { "onCall": "karthik.rao" }, "component": "carrier-sync"
+  }
+]

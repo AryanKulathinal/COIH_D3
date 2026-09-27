@@ -1,0 +1,16 @@
+[
+  {
+    "sourceType": "calendar", "sourceId": "cal-b01", "account": "beta",
+    "timestamp": "2025-04-24T09:30:00.000Z", "from": "lina.park@meridian-client.com",
+    "subject": "Meridian Freight QBR",
+    "body": "Quarterly business review with the client: SLA, peak-season plan, OR-Tools status.",
+    "tags": ["meeting", "client", "qbr"], "priority": "high", "requiresAction": true
+  },
+  {
+    "sourceType": "calendar", "sourceId": "cal-b02", "account": "beta",
+    "timestamp": "2025-04-17T06:00:00.000Z", "from": "sanjay.menon",
+    "subject": "OR-Tools design review",
+    "body": "Review Meera's design doc for the route-optimizer migration.",
+    "tags": ["meeting", "design-review"], "priority": "medium", "mentionsUser": true, "requiresAction": true
+  }
+]

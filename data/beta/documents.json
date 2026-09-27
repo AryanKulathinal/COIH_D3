@@ -1,0 +1,26 @@
+[
+  {
+    "sourceType": "document", "sourceId": "doc-b01", "account": "beta",
+    "timestamp": "2025-01-15T09:00:00.000Z", "from": "karthik.rao",
+    "subject": "Carrier Integration Overview",
+    "body": "carrier-sync pulls pending shipments every 30s and requests labels from carriers. FastShip (v2 API): account-level limit 300 requests/minute, carrier-sync uses batch size 100 across 4 workers. ParcelGo: 600 requests/minute. Retries: 3 attempts with fixed 1s delay. Config lives in carrier-sync/config/carriers.yaml.",
+    "tags": ["carrier", "fastship", "integration", "architecture"],
+    "priority": "medium", "component": "carrier-sync"
+  },
+  {
+    "sourceType": "document", "sourceId": "doc-b02", "account": "beta",
+    "timestamp": "2025-02-01T09:00:00.000Z", "from": "karthik.rao",
+    "subject": "On-call Runbook - Team Beta",
+    "body": "P1 = warehouse cannot ship. P2 = degraded label or tracking flow. First steps: acknowledge in PagerDuty, post in #beta-ops, check carrier-sync and tracking-api dashboards, check the last deploy. Escalation: Karthik Rao (carrier-sync, tracking-api), Sanjay Menon (route-optimizer), Farah Ali (notifications).",
+    "tags": ["runbook", "on-call"],
+    "priority": "high", "component": "team-process"
+  },
+  {
+    "sourceType": "document", "sourceId": "doc-b03", "account": "beta",
+    "timestamp": "2025-04-10T15:00:00.000Z", "from": "meera.iyer",
+    "subject": "Design: route-optimizer on OR-Tools v9",
+    "body": "Plan: wrap OR-Tools VRP solver behind the existing /optimize contract. Keep the k-means pre-pass for routes over 400 stops. Feature flag route-optimizer-ortools, shadow mode for 1 week comparing route length and solve time.",
+    "tags": ["design", "route-optimizer", "or-tools"],
+    "priority": "medium", "component": "route-optimizer"
+  }
+]

@@ -1,0 +1,11 @@
+[
+  {
+    "sourceType": "meeting", "sourceId": "meet-b01", "account": "beta",
+    "timestamp": "2025-04-10T05:30:00.000Z", "from": "sanjay.menon",
+    "to": ["meera.iyer", "karthik.rao", "farah.ali"],
+    "subject": "Team Beta weekly sync",
+    "body": "MEETING TRANSCRIPT (Auto-generated from Teams recording)\nSanjay: OR-Tools decision is final, Meera owns it.\nKarthik: tracking-api latency regression under investigation, likely an N+1 on shipment events.\nFarah: returns templates ship Friday.\nACTION ITEMS: Meera - design doc by Apr 11. Karthik - fix JIRA-B-530 before the QBR. Sanjay - capacity plan draft by Apr 18.",
+    "thread": "thread-b-weekly", "tags": ["meeting", "sync"],
+    "priority": "medium", "mentionsUser": true
+  }
+]

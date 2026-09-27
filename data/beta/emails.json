@@ -1,0 +1,42 @@
+[
+  {
+    "sourceType": "email", "sourceId": "email-b01", "account": "beta",
+    "timestamp": "2025-04-07T08:30:00.000Z", "from": "lina.park@meridian-client.com", "to": ["team-beta@ust.com"],
+    "subject": "Peak season readiness - volumes expected 3x in May",
+    "body": "Hi team, our sales forecast shows shipment volumes roughly 3x current levels from May 5 through June. Please share a capacity plan for carrier-sync and tracking-api by April 22, including any carrier quota changes we need to request. Lina (Meridian Freight)",
+    "thread": "thread-b-peak", "tags": ["client", "capacity", "peak-season"],
+    "priority": "high", "requiresAction": true, "component": "carrier-sync"
+  },
+  {
+    "sourceType": "email", "sourceId": "email-b02", "account": "beta",
+    "timestamp": "2025-04-09T11:15:00.000Z", "from": "sanjay.menon@ust.com", "to": ["team-beta@ust.com"],
+    "subject": "Decision: route-optimizer moves to OR-Tools v9",
+    "body": "Team, after the benchmark last week we are moving route-optimizer from the legacy solver to OR-Tools v9. Legacy solver is frozen - bug fixes only. Meera owns the migration (JIRA-B-512). Target: behind a feature flag by May 2 so we are safe before peak season.",
+    "thread": "thread-b-ortools", "tags": ["decision", "route-optimizer", "architecture"],
+    "priority": "high", "mentionsUser": true, "requiresAction": true, "component": "route-optimizer"
+  },
+  {
+    "sourceType": "email", "sourceId": "email-b03", "account": "beta",
+    "timestamp": "2025-04-14T16:00:00.000Z", "from": "api-updates@fastship.example", "to": ["integrations-beta@ust.com"],
+    "subject": "FastShip API v3 migration complete",
+    "body": "Your account has been migrated to FastShip API v3. v2 endpoints will be sunset on June 30, 2025. Label, tracking and pickup endpoints are unchanged in shape. Please review the v3 release notes on the developer portal for account-level changes.",
+    "thread": "thread-b-fastship-v3", "tags": ["carrier", "fastship", "vendor-notice"],
+    "priority": "low", "component": "carrier-sync"
+  },
+  {
+    "sourceType": "email", "sourceId": "email-b04", "account": "beta",
+    "timestamp": "2025-04-15T07:30:00.000Z", "from": "karthik.rao@ust.com", "to": ["team-beta@ust.com"],
+    "subject": "On-call handover - week of Apr 14",
+    "body": "Taking primary on-call this week, Farah is secondary. Nothing open from last week. Reminder: route-optimizer timeouts (INC-7244) were fixed on Apr 2 by Sanjay - ping him if you see it again.",
+    "thread": "thread-b-oncall", "tags": ["on-call", "handover"],
+    "priority": "medium", "component": "team-process"
+  },
+  {
+    "sourceType": "email", "sourceId": "email-b05", "account": "beta",
+    "timestamp": "2025-04-11T10:00:00.000Z", "from": "lina.park@meridian-client.com", "to": ["team-beta@ust.com", "sanjay.menon@ust.com"],
+    "subject": "Quarterly business review - April 24",
+    "body": "Confirming the QBR on April 24, 3pm IST. Agenda: Q1 SLA (tracking-api p95 target 800ms), peak-season plan, OR-Tools migration status.",
+    "thread": "thread-b-qbr", "tags": ["client", "qbr", "meeting"],
+    "priority": "medium", "component": "tracking-api"
+  }
+]

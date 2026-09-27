@@ -1,0 +1,20 @@
+[
+  {
+    "id": "KB-B-001",
+    "account": "beta",
+    "title": "tracking-api 502s when the WMS replays webhook events",
+    "category": "incident",
+    "symptom": "tracking-api returns 502s and pods restart after the warehouse WMS replays a large batch of webhook events.",
+    "rootCause": "Webhook ingestion ran synchronously inside the API pods; a 60k-event replay exhausted the Node event loop and failed health checks.",
+    "resolution": "1) Enable the ingestion queue (WEBHOOK_MODE=queue) so events go to SQS and are processed by tracking-worker. 2) Rate-limit the WMS webhook route to 200 req/s. 3) If a replay is in progress: scale tracking-worker to 6 replicas and keep API pods at minimum 4.",
+    "prevention": "WMS team must announce replays in #beta-ops; alert on webhook queue depth over 10k.",
+    "components": ["tracking-api"],
+    "tags": ["tracking-api", "webhook", "502", "wms", "queue"],
+    "evidence": [{ "sourceId": "INC-7188", "sourceType": "incident", "title": "P2: tracking-api 502s after WMS webhook flood" }],
+    "status": "confirmed",
+    "capturedFrom": "INC-7188",
+    "capturedBy": "coih-capture-engine",
+    "confirmedBy": "karthik.rao",
+    "capturedAt": "2025-03-20T14:00:00.000Z"
+  }
+]
