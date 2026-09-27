@@ -89,12 +89,12 @@ function Shell() {
             <Zap size={14} color="white" />
           </div>
           <span style={{ fontWeight: 700, fontSize: "0.813rem", color: "var(--primary-900)" }}>COIH</span>
-          <span className="badge" style={{ background: `${account.color}1a`, color: account.color, fontWeight: 600 }} title={account.domain}>
+          <span className="badge" style={{ background: `${account.color}1a`, color: account.color, fontWeight: 600, whiteSpace: "nowrap" }} title={account.domain}>
             {account.name} · {account.client}
           </span>
         </div>
 
-        <nav style={{ display: "flex", gap: "0.25rem", alignSelf: "stretch" }}>
+        <nav style={{ display: "flex", gap: "0.25rem", alignSelf: "stretch", overflowX: "auto", margin: "0 0.75rem" }}>
           {items.map((item) => {
             const isActive = location.pathname.startsWith(item.to);
             return (
@@ -103,7 +103,7 @@ function Shell() {
                 fontSize: "0.688rem", fontWeight: isActive ? 600 : 500,
                 color: isActive ? "var(--primary)" : "var(--grey-600)",
                 borderBottom: isActive ? "2px solid var(--primary)" : "2px solid transparent",
-                padding: "0 0.625rem", textDecoration: "none", transition: "color 0.15s",
+                padding: "0 0.625rem", textDecoration: "none", transition: "color 0.15s", whiteSpace: "nowrap",
               }}>
                 <item.icon size={13} />
                 {item.label}
